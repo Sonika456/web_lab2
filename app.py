@@ -57,6 +57,42 @@ def not_found(err):
         </body>
     </html>
     ''', 404
+@app.errorhandler(500)
+def handle_internal_server_error(e):
+    return '''
+    <!doctype html>
+    <html>
+      <head>
+        <title>Ошибка 500</title>
+        <style>
+            body { 
+                font-family: sans-serif; 
+                text-align: center; 
+                padding-top: 50px; 
+                background-color: #f4f4f4;
+                color: #333;
+            }
+            .error-container {
+                max-width: 600px;
+                margin: auto;
+                background-color: #fff;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            h1 {
+                color: #ff4136;
+            }
+        </style>
+      </head>
+      <body>
+        <div class="error-container">
+            <h1>Упс, ошибка!</h1>
+            <p>Произошла внутренняя ошибка сервера. Приносим извинения за неудобства. Пожалуйста, попробуйте позже.</p>
+        </div>
+      </body>
+    </html>
+    ''', 500
 @app.route("/")
 @app.route("/index")
 def index():
@@ -90,10 +126,23 @@ def index():
         </body>
     </html>
     '''
-
 @app.route("/lab1")
 def lab1():
     index_url = url_for('index')
+    web_url = url_for('web')
+    author_url = url_for('author')
+    image_url = url_for('image')
+    counter_url = url_for('counter')
+    reset_url = url_for('reset_counter')
+    info_url = url_for('info')
+    created_url = url_for('created')
+    status_400_url = url_for('status_400')
+    status_401_url = url_for('status_401')
+    status_402_url = url_for('status_402')
+    status_403_url = url_for('status_403')
+    status_405_url = url_for('status_405')
+    status_418_url = url_for('status_418')
+    error_url = url_for('cause_error')
     return '''
     <!doctype html>
     <html>
@@ -104,6 +153,12 @@ def lab1():
                 p { font-size: 1.1em; }
                 a { color: #0056b3; text-decoration: none; font-weight: bold; }
                 a:hover { text-decoration: underline; }
+                .route-list { margin-top: 30px; }
+                .route-list h2 { color: #0056b3; }
+                .route-list ul { list-style-type: none; padding: 0; }
+                .route-list li { margin-bottom: 5px; }
+                .route-list a { padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px; display: inline-block; }
+                .route-list a:hover { background-color: #e2e6ea; }
             </style>
         </head>
         <body>
@@ -114,6 +169,26 @@ def lab1():
                 каркасов веб-приложений, сознательно предоставляющих лишь самые базовые возможности.
             </p>
             <a href="''' + index_url + '''">На главную страницу</a>
+
+            <div class="route-list">
+                <h2>Список роутов</h2>
+                <ul>
+                    <li><a href="''' + web_url + '''">/lab1/web</a></li>
+                    <li><a href="''' + author_url + '''">/lab1/author</a></li>
+                    <li><a href="''' + image_url + '''">/lab1/image</a></li>
+                    <li><a href="''' + counter_url + '''">/lab1/counter</a></li>
+                    <li><a href="''' + reset_url + '''">/lab1/reset_counter</a></li>
+                    <li><a href="''' + info_url + '''">/lab1/info</a></li>
+                    <li><a href="''' + created_url + '''">/lab1/created</a></li>
+                    <li><a href="''' + status_400_url + '''">/status/400</a></li>
+                    <li><a href="''' + status_401_url + '''">/status/401</a></li>
+                    <li><a href="''' + status_402_url + '''">/status/402</a></li>
+                    <li><a href="''' + status_403_url + '''">/status/403</a></li>
+                    <li><a href="''' + status_405_url + '''">/status/405</a></li>
+                    <li><a href="''' + status_418_url + '''">/status/418</a></li>
+                    <li><a href="''' + error_url + '''">/error</a></li>
+                </ul>
+            </div>
         </body>
     </html>
     '''
@@ -129,7 +204,6 @@ def web():
             'X-Server': 'sample',
             'Content-Type': 'text/plain; charset=utf-8'
         }
-
 @app.route("/lab1/author")
 def author():
     name = "Черевцова Софья Константиновна"
@@ -177,7 +251,7 @@ def counter():
     time = datetime.datetime.today()
     url = request.url
     client_ip = request.remote_addr
-    reset_url = url_for('/lab1/reset_counter')
+    reset_url = url_for('reset_counter')
     return '''
     <!doctype html>
     <html>
@@ -208,7 +282,7 @@ def counter():
 def reset_counter():
     global count
     count = 0
-    return redirect(url_for('/lab1/counter'))
+    return redirect(url_for('counter'))
 @app.route("/lab1/info")
 def info():
     return redirect("/lab1/author")
@@ -238,7 +312,6 @@ def status_400():
         </body>
     </html>
     ''', 400
-
 @app.route("/status/401")
 def status_401():
     return '''
@@ -254,7 +327,6 @@ def status_401():
         </body>
     </html>
     ''', 401
-
 @app.route("/status/402")
 def status_402():
     return '''
@@ -270,7 +342,6 @@ def status_402():
       </body>
     </html>
     ''', 402
-
 @app.route("/status/403")
 def status_403():
     return '''
@@ -286,7 +357,6 @@ def status_403():
       </body>
     </html>
     ''', 403
-
 @app.route("/status/405")
 def status_405():
     return '''
@@ -302,7 +372,6 @@ def status_405():
       </body>
     </html>
     ''', 405
-
 @app.route("/status/418")
 def status_418():
     return '''
@@ -322,39 +391,3 @@ def status_418():
 def cause_error():
     result = 1 / 0
     return "Этого не может быть"
-@app.errorhandler(500)
-def handle_internal_server_error(e):
-    return '''
-    <!doctype html>
-    <html>
-      <head>
-        <title>Ошибка 500</title>
-        <style>
-            body { 
-                font-family: sans-serif; 
-                text-align: center; 
-                padding-top: 50px; 
-                background-color: #f4f4f4;
-                color: #333;
-            }
-            .error-container {
-                max-width: 600px;
-                margin: auto;
-                background-color: #fff;
-                padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            }
-            h1 {
-                color: #ff4136;
-            }
-        </style>
-      </head>
-      <body>
-        <div class="error-container">
-            <h1>Упс, ошибка!</h1>
-            <p>Произошла внутренняя ошибка сервера. Приносим извинения за неудобства. Пожалуйста, попробуйте позже.</p>
-        </div>
-      </body>
-    </html>
-    ''', 500
