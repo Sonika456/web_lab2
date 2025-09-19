@@ -149,6 +149,11 @@ def author():
 def image():
     image_path = url_for("static", filename="oak.jpg")
     css_path = url_for("static", filename="lab1.css")
+    headers = {
+        'Content-Language': 'ru',
+        'X-Generator': 'Flask-App',
+        'X-Custom-Header': 'This is a custom header value'
+    }
     return '''
     <!doctype html>
     <html>
@@ -163,7 +168,7 @@ def image():
         </div>
       </body>
     </html>
-    '''
+    ''', 200, headers
 count = 0
 @app.route("/lab1/counter")
 def counter():
