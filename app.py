@@ -61,18 +61,38 @@ def counter():
     time = datetime.datetime.today()
     url = request.url
     client_ip = request.remote_addr
+    reset_url = url_for('reset_counter')
     return '''
     <!doctype html>
     <html>
+        <head>
+            <title>Счетчик</title>
+            <style>
+            body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+            .info { border: 1px solid #ccc; padding: 15px; border-radius: 8px; margin-top: 20px; }
+            a { color: #007bff; text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            </style>
+        </head>
         <body>
-            Сколько раз вы сюда захлдили: ''' + str(count) + '''
+            <h1>Счетчик посещений</h1>
+            <p>Сколько раз вы сюда заходили: <b>''' + str(count) + '''</b></p>
             <hr>
+            <a href="''' + reset_url + '''">Очистить счетчик</a>
+
+            <div class="info">
             Дата и время: ''' + str(time) + '''<br>
             Запрошенный адрес: ''' + url + '''<br>
             Ваш IP-адрес: ''' + client_ip + '''<br>
+            </div>
         </body>
     </html>
     '''
+@app.route("/reset_counter")
+def reset_counter():
+    global count
+    count = 0
+    return redirect(url_for('counter'))
 @app.route("/info")
 def info():
     return redirect("/author")
