@@ -2,9 +2,19 @@ from flask import Flask, url_for, request, redirect
 import datetime
 app = Flask(__name__)
 
+log_entries = []
 @app.errorhandler(404)
 def not_found(err):
     path = url_for("static", filename="6fcd6199-8445-459b-8d3e-2857d3762fdf.jpg")
+    ip_address = request.remote_addr
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    requested_url = request.url
+    log_string = f"[{timestamp}] пользователь {ip_address} зашёл на адрес: <u>{requested_url}</u>"
+    log_entries.append(log_string)
+
+    log_html_list = ""
+    for entry in log_entries:
+        log_html_list += f"<li>{entry}</li>"
     return '''
     <!doctype html>
     <html>
@@ -52,6 +62,13 @@ def not_found(err):
                 <h1>НАЙН КАПУТ!</h1>
                 <p>Такая страница не найдена... Что-то пошло не так, а-ля-ля-ля!</p>
                 <img src="''' + path + '''">
+                <p><strong>Ваш IP-адрес:</strong> ''' + ip_address + '''</p>
+                <p><strong>Дата доступа:</strong> ''' + timestamp + '''</p>
+                
+                <h2>Журнал:</h2>
+                <ul>
+                    ''' + log_html_list + '''
+                </ul>
                 <a href="''' + url_for('index') + '''">Вернуться на главную</a>
             </div>
         </body>
