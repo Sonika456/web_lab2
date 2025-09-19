@@ -166,3 +166,98 @@ def created():
         </body>
     </html>
     ''', 201
+@app.route("/status/400")
+def status_400():
+    return '''
+    <!doctype html>
+    <html>
+        <head>
+            <title>Ошибка 400</title>
+            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+        </head>
+        <body>
+            <h1>Ошибка 400: Некорректный запрос</h1>
+            <p>Сервер не смог обработать ваш запрос из-за неверного синтаксиса.</p>
+        </body>
+    </html>
+    ''', 400
+
+@app.route("/status/401")
+def status_401():
+    return '''
+    <!doctype html>
+    <html>
+        <head>
+            <title>Ошибка 401</title>
+            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+        </head>
+        <body>
+            <h1>Ошибка 401: Не авторизован</h1>
+            <p>Для доступа к этой странице требуется аутентификация.</p>
+        </body>
+    </html>
+    ''', 401
+
+@app.route("/status/402")
+def status_402():
+    return '''
+    <!doctype html>
+    <html>
+      <head>
+        <title>Ошибка 402</title>
+        <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+      </head>
+      <body>
+        <h1>Ошибка 402: Требуется оплата</h1>
+        <p>Этот код зарезервирован для будущего использования.</p>
+      </body>
+    </html>
+    ''', 402
+
+@app.route("/status/403")
+def status_403():
+    return '''
+    <!doctype html>
+    <html>
+      <head>
+        <title>Ошибка 403</title>
+        <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+      </head>
+      <body>
+        <h1>Ошибка 403: Доступ запрещен</h1>
+        <p>У вас нет прав для просмотра этой страницы.</p>
+      </body>
+    </html>
+    ''', 403
+
+@app.route("/status/405")
+def status_405():
+    return '''
+    <!doctype html>
+    <html>
+      <head>
+        <title>Ошибка 405</title>
+        <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+      </head>
+      <body>
+        <h1>Ошибка 405: Метод не поддерживается</h1>
+        <p>Использованный метод запроса не поддерживается для данного ресурса.</p>
+      </body>
+    </html>
+    ''', 405
+
+@app.route("/status/418")
+def status_418():
+    return '''
+    <!doctype html>
+    <html>
+      <head>
+        <title>Ошибка 418</title>
+        <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+      </head>
+      <body>
+        <h1>Ошибка 418: Я — чайник</h1>
+        <p>Сервер отказывается заваривать кофе, потому что он чайник.</p>
+      </body>
+    </html>
+    ''', 418
