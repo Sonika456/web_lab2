@@ -2,6 +2,9 @@ from flask import Flask, url_for, request, redirect
 import datetime
 app = Flask(__name__)
 
+@app.errorhandler(404)
+def not_found(err):
+    return "нет такой страницы", 404
 @app.route("/")
 @app.route("/web")
 def web():
@@ -33,14 +36,21 @@ def author():
         </html>"""
 @app.route("/image")
 def image():
-    path = url_for("static", filename="oak.jpg")
+    image_path = url_for("static", filename="oak.jpg")
+    css_path = url_for("static", filename="lab1.css")
     return '''
     <!doctype html>
     <html>
-        <body>
-            <h1>Дуб</h1>
-            <img src="''' + path + '''">
-        </body>
+      <head>
+        <title>Дуб</title>
+        <link rel="stylesheet" href="''' + css_path + '''">
+      </head>
+      <body>
+        <div class="container">
+          <h1>Дуб</h1>
+          <img src="''' + image_path + '''" alt="Дуб">
+        </div>
+      </body>
     </html>
     '''
 count = 0
@@ -77,8 +87,3 @@ def created():
         </body>
     </html>
     ''', 201
-app = Flask(__name__)
-
-@app.errorhandler(404)
-def not_found(err):
-    return "нет такой страницы", 404
