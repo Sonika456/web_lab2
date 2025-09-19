@@ -6,6 +6,42 @@ app = Flask(__name__)
 def not_found(err):
     return "нет такой страницы", 404
 @app.route("/")
+@app.route("/index")
+def index():
+    lab1_url = url_for('lab1')
+    return '''
+    <!doctype html>
+    <html>
+        <head>
+            <title>НГТУ, ФБ, Лабораторные работы</title>
+            <style>
+                body { font-family: sans-serif; line-height: 1.6; padding: 20px; margin: 0 px; background-color: #f4f4f4; color: #333; }
+                header { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 10px; margin-bottom: 20px; }
+                h1 { color: #0056b3; }
+                ul { list-style-type: none; padding: 0; }
+                li { margin-bottom: 10px; }
+                a { color: #333; text-decoration: none; font-weight: bold; padding: 8px 12px; border: 1px solid #ccc; border-radius: 5px; display: inline-block; transition: background-color 0.3s; }
+                nav a:hover { background-color: #e2e6ea; }
+                footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 0.9em; color: #666; position: fixed; bottom: 0; right: 0; left: 0;}
+            </style>
+        </head>
+        <body>
+            <header>
+                <h1>НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных</h1>
+            </header>
+            <ul>
+                <li><a href="''' + lab1_url + '''">Первая лабораторная</a></li>
+            </ul>
+            <footer>
+                <p>Черевцова Софья, ФБИ-34, 25 курс, 2025</p>
+            </footer>
+        </body>
+    </html>
+    '''
+
+@app.route("/lab1")
+def lab1():
+    return "<h1>Первая лабораторная работа.</h1>"
 @app.route("/lab1/web")
 def web():
     return """<!doctype html>
