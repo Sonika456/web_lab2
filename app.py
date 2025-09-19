@@ -313,3 +313,43 @@ def status_418():
       </body>
     </html>
     ''', 418
+@app.route("/error")
+def cause_error():
+    result = 1 / 0
+    return "Этого не может быть"
+@app.errorhandler(500)
+def handle_internal_server_error(e):
+    return '''
+    <!doctype html>
+    <html>
+      <head>
+        <title>Ошибка 500</title>
+        <style>
+            body { 
+                font-family: sans-serif; 
+                text-align: center; 
+                padding-top: 50px; 
+                background-color: #f4f4f4;
+                color: #333;
+            }
+            .error-container {
+                max-width: 600px;
+                margin: auto;
+                background-color: #fff;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            h1 {
+                color: #ff4136;
+            }
+        </style>
+      </head>
+      <body>
+        <div class="error-container">
+            <h1>Упс, ошибка!</h1>
+            <p>Произошла внутренняя ошибка сервера. Приносим извинения за неудобства. Пожалуйста, попробуйте позже.</p>
+        </div>
+      </body>
+    </html>
+    ''', 500
