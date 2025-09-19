@@ -4,7 +4,59 @@ app = Flask(__name__)
 
 @app.errorhandler(404)
 def not_found(err):
-    return "нет такой страницы", 404
+    path = url_for("static", filename="6fcd6199-8445-459b-8d3e-2857d3762fdf.jpg")
+    return '''
+    <!doctype html>
+    <html>
+        <head>
+            <title>НАЙН КАПУТ!</title>
+            <style>
+                body { 
+                    font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif; 
+                    text-align: center; 
+                    padding-top: 50px; 
+                    background-color: #fce4ec;
+                    color: #e91e63;
+                    font-size: 1.2em;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: auto;
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 15px;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                }
+                h1 {
+                    font-size: 3em;
+                    color: #880e4f;
+                }
+                img {
+                    max-width: 100%;
+                    height: auto;
+                    margin-top: 20px;
+                    border: 5px solid #ff79b9;
+                    border-radius: 10px;
+                }
+                a {
+                    color: #c51162;
+                    text-decoration: none;
+                    font-weight: bold;
+                    display: block;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>НАЙН КАПУТ!</h1>
+                <p>Такая страница не найдена... Что-то пошло не так, а-ля-ля-ля!</p>
+                <img src="''' + path + '''">
+                <a href="''' + url_for('index') + '''">Вернуться на главную</a>
+            </div>
+        </body>
+    </html>
+    ''', 404
 @app.route("/")
 @app.route("/index")
 def index():
