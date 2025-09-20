@@ -408,3 +408,9 @@ def status_418():
 def cause_error():
     result = 1 / 0
     return "Этого не может быть"
+@app.route('/lab2/a')
+def a():
+    return 'без слэша'
+@app.route('/lab2/a/')
+def a2():
+    return 'со слэшем'
