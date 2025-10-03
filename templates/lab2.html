@@ -8,9 +8,21 @@
     <h1>Шаблоны</h1>
     <div>Тема лабораторной - шаблоны. Список сделанных страниц</div>
     <ol>
-        <li>
-            <a href="/lab2/example">example</a>
-        </li>
+        {% for url, path, desc in lab2_links %}
+            <li style="margin-bottom: 10px;">
+                <a href="{{ url }}" style="
+                    display: inline-block;
+                    padding: 8px 12px;
+                    background-color: #f0f0f0;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    color: #333;
+                    margin-right: 15px;
+                ">{{ path }}</a>
+                — {{ desc }}
+            </li>
+        {% endfor %}
     </ol>
 {% endblock %}
 

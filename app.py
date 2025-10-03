@@ -137,6 +137,7 @@ def bad_request(error):
 @app.route("/index")
 def index():
     lab1_url = url_for('lab1')
+    lab2_url = url_for('lab2')
     return '''
     <!doctype html>
     <html>
@@ -159,6 +160,7 @@ def index():
             </header>
             <ul>
                 <li><a href="''' + lab1_url + '''">Первая лабораторная</a></li>
+                <a href="''' + lab2_url + '''">Вторая лабораторная</a>
             </ul>
             <footer>
                 <p>Черевцова Софья, ФБИ-34, 3 курс, 2025</p>
@@ -232,6 +234,22 @@ def lab1():
         </body>
     </html>
     '''
+LAB2_ROUTES = [
+    ('a', '/lab2/a', 'Роут без слэша'),
+    ('a2', '/lab2/a/', 'Роут со слэшем'),
+    ('flowers', '/lab2/flowers/<int:flower_id>', 'Цветок по ID (0-3)'),
+    ('add_flower', '/lab2/add_flower/<name>', 'Добавить цветок'),
+    ('add_flower_no_name', '/lab2/add_flower/', 'Добавить цветок (ошибка 400)'),
+    ('all_flowers', '/lab2/all_flowers', 'Все цветы'),
+    ('clear_flowers', '/lab2/clear_flowers', 'Очистить список цветов'),
+    ('example', '/lab2/example', 'Пример шаблона Jinja2'),
+    ('filters', '/lab2/filters', 'Примеры фильтров Jinja2'),
+    ('calc_params', '/lab2/calc/<int:a>/<int:b>', 'Калькулятор (два параметра)'),
+    ('calc_default', '/lab2/calc/', 'Калькулятор (редирект на 1/1)'),
+    ('calc_one_param', '/lab2/calc/<int:a>', 'Калькулятор (один параметр)'),
+    ('book_list_view', '/lab2/books', 'Список книг (таблица)'),
+    ('berry_view', '/lab2/berries', 'Список ягод (с картинками)'),
+]
 @app.route("/lab1/web")
 def web():
     return """<!doctype html>
@@ -516,7 +534,23 @@ def example():
 
 @app.route('/lab2/')
 def lab2():
-    return render_template('lab2.html')
+    route_list = [
+        (name, address, desc)
+        for name, address, desc in LAB2_ROUTES
+    ]
+    links = []
+    links.append( (url_for('flowers', flower_id=0), '/lab2/flowers/0', 'Цветок №0') )
+    links.append( (url_for('add_flower', name='Роза'), '/lab2/add_flower/Роза', 'Добавить "Роза"') )
+    links.append( (url_for('calc_params', a=5, b=3), '/lab2/calc/5/3', 'Калькулятор 5 и 3') )
+    for route_name, route_path, route_desc in LAB2_ROUTES:
+        if route_name in ['flowers', 'add_flower', 'calc_params']:
+            continue          
+        try:
+            url = url_for(route_name)
+            links.append( (url, route_path, route_desc) )
+        except Exception as e:
+            links.append( (route_path, route_path, route_desc) )
+    return render_template('lab2.html', lab2_links=links)
 @app.route('/lab2/filters')
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
