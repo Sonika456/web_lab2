@@ -550,3 +550,18 @@ def calc_default():
 @app.route('/lab2/calc/<int:a>')
 def calc_one_param(a):
     return redirect(url_for('calc_params', a=a, b=1))
+book_list = [
+    {"author": "Джон Толкин", "title": "Властелин колец", "genre": "Фэнтези", "pages": 1178},
+    {"author": "Джейн Остин", "title": "Гордость и предубеждение", "genre": "Роман", "pages": 432},
+    {"author": "Габриэль Гарсиа Маркес", "title": "Сто лет одиночества", "genre": "Магический реализм", "pages": 417},
+    {"author": "Альбер Камю", "title": "Посторонний", "genre": "Философия", "pages": 159},
+    {"author": "Уильям Шекспир", "title": "Гамлет", "genre": "Трагедия", "pages": 300},
+    {"author": "Гарпер Ли", "title": "Убить пересмешника", "genre": "Художественная литература", "pages": 336},
+    {"author": "Владимир Набоков", "title": "Лолита", "genre": "Роман", "pages": 368},
+    {"author": "Эрих Мария Ремарк", "title": "Триумфальная арка", "genre": "Военный роман", "pages": 455},
+    {"author": "Стивен Кинг", "title": "Сияние", "genre": "Ужасы", "pages": 447},
+    {"author": "Роберт Стивенсон", "title": "Остров сокровищ", "genre": "Приключения", "pages": 288},
+]
+@app.route('/lab2/books')
+def book_list_view():
+    return render_template('books.html', books=book_list, count=len(book_list))

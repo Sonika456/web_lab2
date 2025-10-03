@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{# Номер лабораторной работы #}
+{% block lab %}Лабораторная работа 2{% endblock %}
+
+{# Основной контент: #}
+{% block main %}
+    <h1>Список книг. Количество ({{ count }} экземпляров)</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Автор</th>
+                <th>Название книги</th>
+                <th>Жанр</th>
+                <th>Страниц</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ book.author }}</td>
+                <td><strong>{{ book.title }}</strong></td>
+                <td>{{ book.genre }}</td>
+                <td>{{ book.pages }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
