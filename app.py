@@ -114,6 +114,25 @@ def handle_internal_server_error(e):
 def cause_error():
     result = 0 / 1
     return "Этого не может быть"
+@app.errorhandler(400)
+def bad_request(error):
+    if request.path.strip('/') == 'lab2/add_flower':
+        error_message = "Вы не задали имя цветка"
+    else:
+        error_message = "Сервер не смог обработать ваш запрос из-за неверного синтаксиса."
+    return '''
+    <!doctype html>
+    <html>
+        <head>
+            <title>Ошибка 400</title>
+            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+        </head>
+        <body>
+            <h1>Ошибка 400: Некорректный запрос</h1>
+            <p>''' + error_message + '''</p>
+        </body>
+    </html>
+    ''', 400
 @app.route("/")
 @app.route("/index")
 def index():
@@ -318,21 +337,6 @@ def created():
         </body>
     </html>
     ''', 201
-@app.route("/status/400")
-def status_400():
-    return '''
-    <!doctype html>
-    <html>
-        <head>
-            <title>Ошибка 400</title>
-            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
-        </head>
-        <body>
-            <h1>Ошибка 400: Некорректный запрос</h1>
-            <p>Сервер не смог обработать ваш запрос из-за неверного синтаксиса.</p>
-        </body>
-    </html>
-    ''', 400
 @app.route("/status/401")
 def status_401():
     return '''
@@ -415,18 +419,35 @@ def a():
 def a2():
     return 'со слэшем'
 
+
+
+
+
 flower_list = ['Лилия', 'Тюльпан', 'Ирис', 'Незабудка']
 
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
-    if flower_id >= len(flower_list):
-        abort(404)
+    all_flowers_url = url_for('all_flowers')
+    if flower_id >= len(flower_list) or flower_id < 0:
+        abort(404) 
     else:
-        return "Цветок: " + flower_list[flower_id]
+        flower_name = flower_list[flower_id]
+        return f'''
+        <!doctype html>
+        <html>
+        <body>
+            <h1>Цветок №{flower_id}</h1>
+            <p>Название: <b>{flower_name}</b></p>
+            <hr>
+            <p><a href="{all_flowers_url}">Посмотреть все цветы</a></p>
+        </body>
+        </html>
+        '''
 
 @app.route('/lab2/add_flower/<name>')
 def add_flower(name):
     flower_list.append(name)
+    all_flowers_url = url_for('all_flowers')
     return f'''
     <!doctype html>
     <html>
@@ -435,9 +456,49 @@ def add_flower(name):
             <p>Название нового цветка: {name} </p>
             <p>Всего цветков: {len(flower_list)} </p>
             <p>Полный список: {flower_list} </p>
+            <p><a href="{all_flowers_url}">Посмотреть все цветы</a></p>
         </body>
     </html>
 '''
+@app.route('/lab2/add_flower/')
+def add_flower_no_name():
+    abort(400)
+@app.route('/lab2/all_flowers')
+def all_flowers():
+    clear_url = url_for('clear_flowers')
+    if not flower_list:
+        content = "<p>Список цветов пуст.</p>"
+    else:
+        flowers_html = "".join([f"<li>{i}: <a href=\"{url_for('flowers', flower_id=i)}\">{name}</a></li>" 
+                                for i, name in enumerate(flower_list)])
+        content = f'''
+        <h2>Список цветов (всего: {len(flower_list)})</h2>
+        <ul style="list-style-type: none;">
+            {flowers_html}
+        </ul>
+        '''
+    return f'''
+    <!doctype html>
+    <html>
+        <body>
+            <h1>Все цветы в списке</h1>
+            {content}
+            <hr>
+            <p><a href="{clear_url}" style="color: red;">Очистить список цветов</a></p>
+        </body>
+    </html>
+    '''
+@app.route('/lab2/clear_flowers')
+def clear_flowers():
+    flower_list = []
+    all_flowers_url = url_for('all_flowers')
+    return f'''
+    <!doctype html><html><body>
+        <h1>Список цветов полностью очищен!</h1>
+        <p>Теперь в списке: {len(flower_list)} цветков.</p>
+        <p><a href="{all_flowers_url}">Посмотреть пустой список</a></p>
+    </body></html>
+    '''
 @app.route('/lab2/example')
 def example():
     name = 'Черевцова Софья'
