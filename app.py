@@ -1,4 +1,4 @@
-from flask import Flask, url_for, request, redirect
+from flask import Flask, url_for, request, redirect, abort
 import datetime
 app = Flask(__name__)
 
@@ -138,7 +138,7 @@ def index():
                 <li><a href="''' + lab1_url + '''">Первая лабораторная</a></li>
             </ul>
             <footer>
-                <p>Черевцова Софья, ФБИ-34, 25 курс, 2025</p>
+                <p>Черевцова Софья, ФБИ-34, 2 курс, 2025</p>
             </footer>
         </body>
     </html>
@@ -414,3 +414,12 @@ def a():
 @app.route('/lab2/a/')
 def a2():
     return 'со слэшем'
+
+flower_list = ('Лилия', 'Тюльпан', 'Ирис', 'Незабудка')
+
+@app.route('/lab2/flowers/<int:flower_id>')
+def flowers(flower_id):
+    if flower_id >= len(flower_list):
+        abort(404)
+    else:
+        return "Цветок: " + flower_list[flower_id]
