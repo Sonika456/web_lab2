@@ -521,3 +521,32 @@ def lab2():
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
     return render_template('filter.html', phrase=phrase)
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def calc_params(a, b):
+    sum_res = a + b
+    sub_res = a - b
+    mul_res = a * b
+    try:
+        div_res = a / b
+    except ZeroDivisionError:
+        div_res = "Ошибка: деление на ноль"
+    pow_res = a ** b  
+    return f'''
+    <!doctype html>
+    <html>
+    <body>
+        <h1>Расчёт с параметрами: {a} и {b}</h1>
+        <p>{a} + {b} = {sum_res}</p>
+        <p>{a} - {b} = {sub_res}</p>
+        <p>{a} &times; {b} = {mul_res}</p>
+        <p>{a} / {b} = {div_res}</p>
+        <p>{a}<sup>{b}</sup> = {pow_res}</p>
+    </body>
+    </html>
+    '''
+@app.route('/lab2/calc/')
+def calc_default():
+    return redirect(url_for('calc_params', a=1, b=1))
+@app.route('/lab2/calc/<int:a>')
+def calc_one_param(a):
+    return redirect(url_for('calc_params', a=a, b=1))
