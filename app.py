@@ -110,6 +110,10 @@ def handle_internal_server_error(e):
       </body>
     </html>
     ''', 500
+@app.route("/error")
+def cause_error():
+    result = 0 / 1
+    return "Этого не может быть"
 @app.route("/")
 @app.route("/index")
 def index():
@@ -229,12 +233,12 @@ def author():
 
     return """<!doctype html>
         <html>
-           <body>
-               <p>Студент: """ + name + """</p>
-               <p>Группа: """ + group + """</p>
-               <p>Факультет: """ + faculty + """</p>
-               <a href="/web">web</a>
-           </body>
+            <body>
+                <p>Студент: """ + name + """</p>
+                <p>Группа: """ + group + """</p>
+                <p>Факультет: """ + faculty + """</p>
+                <a href="/web">web</a>
+            </body>
         </html>"""
 @app.route("/lab1/image")
 def image():
@@ -248,16 +252,16 @@ def image():
     return '''
     <!doctype html>
     <html>
-      <head>
-        <title>Дуб</title>
-        <link rel="stylesheet" href="''' + css_path + '''">
-      </head>
-      <body>
-        <div class="container">
-          <h1>Дуб</h1>
-          <img src="''' + image_path + '''" alt="Дуб">
-        </div>
-      </body>
+        <head>
+            <title>Дуб</title>
+            <link rel="stylesheet" href="''' + css_path + '''">
+        </head>
+        <body>
+            <div class="container">
+            <h1>Дуб</h1>
+            <img src="''' + image_path + '''" alt="Дуб">
+            </div>
+        </body>
     </html>
     ''', 200, headers
 count = 0
@@ -349,14 +353,14 @@ def status_402():
     return '''
     <!doctype html>
     <html>
-      <head>
-        <title>Ошибка 402</title>
-        <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
-      </head>
-      <body>
-        <h1>Ошибка 402: Требуется оплата</h1>
-        <p>Этот код зарезервирован для будущего использования.</p>
-      </body>
+        <head>
+            <title>Ошибка 402</title>
+            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+        </head>
+        <body>
+            <h1>Ошибка 402: Требуется оплата</h1>
+            <p>Этот код зарезервирован для будущего использования.</p>
+        </body>
     </html>
     ''', 402
 @app.route("/status/403")
@@ -364,14 +368,14 @@ def status_403():
     return '''
     <!doctype html>
     <html>
-      <head>
-        <title>Ошибка 403</title>
-        <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
-      </head>
-      <body>
-        <h1>Ошибка 403: Доступ запрещен</h1>
-        <p>У вас нет прав для просмотра этой страницы.</p>
-      </body>
+        <head>
+            <title>Ошибка 403</title>
+            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+        </head>
+        <body>
+            <h1>Ошибка 403: Доступ запрещен</h1>
+            <p>У вас нет прав для просмотра этой страницы.</p>
+        </body>
     </html>
     ''', 403
 @app.route("/status/405")
@@ -379,14 +383,14 @@ def status_405():
     return '''
     <!doctype html>
     <html>
-      <head>
-        <title>Ошибка 405</title>
-        <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
-      </head>
-      <body>
-        <h1>Ошибка 405: Метод не поддерживается</h1>
-        <p>Использованный метод запроса не поддерживается для данного ресурса.</p>
-      </body>
+        <head>
+            <title>Ошибка 405</title>
+            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+        </head>
+        <body>
+            <h1>Ошибка 405: Метод не поддерживается</h1>
+            <p>Использованный метод запроса не поддерживается для данного ресурса.</p>
+        </body>
     </html>
     ''', 405
 @app.route("/status/418")
@@ -394,20 +398,16 @@ def status_418():
     return '''
     <!doctype html>
     <html>
-      <head>
-        <title>Ошибка 418</title>
-        <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
-      </head>
-      <body>
-        <h1>Ошибка 418: Я — чайник</h1>
-        <p>Сервер отказывается заваривать кофе, потому что он чайник.</p>
-      </body>
+        <head>
+            <title>Ошибка 418</title>
+            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+        </head>
+        <body>
+            <h1>Ошибка 418: Я — чайник</h1>
+            <p>Сервер отказывается заваривать кофе, потому что он чайник.</p>
+        </body>
     </html>
     ''', 418
-@app.route("/error")
-def cause_error():
-    result = 1 / 0
-    return "Этого не может быть"
 @app.route('/lab2/a')
 def a():
     return 'без слэша'
@@ -415,7 +415,7 @@ def a():
 def a2():
     return 'со слэшем'
 
-flower_list = ('Лилия', 'Тюльпан', 'Ирис', 'Незабудка')
+flower_list = ['Лилия', 'Тюльпан', 'Ирис', 'Незабудка']
 
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
@@ -423,3 +423,18 @@ def flowers(flower_id):
         abort(404)
     else:
         return "Цветок: " + flower_list[flower_id]
+
+@app.route('/lab2/add_flower/<name>')
+def add_flower(name):
+    flower_list.append(name)
+    return f'''
+    <!doctype html>
+    <html>
+        <body>
+            <h1>Добавлен новый цветок</h1>
+            <p>Название нового цветка: {name} </p>
+            <p>Всего цветков: {len(flower_list)} </p>
+            <p>Полный список: {flower_list} </p>
+        </body>
+    </html>
+'''
