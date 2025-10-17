@@ -1,11 +1,13 @@
-from flask import Flask, url_for, request, redirect, abort, render_template
+from flask import Flask, url_for, request
 import datetime
 from lab1 import lab1
 from lab2 import lab2
+from lab3 import lab3
 
 app = Flask(__name__)
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
+app.register_blueprint(lab3)
 
 log_entries = []
 @app.errorhandler(404)
@@ -145,21 +147,14 @@ def bad_request(error):
 def index():
     lab1_url = url_for('lab1.lab11')
     lab2_url = url_for('lab2.lab22')
+    lab3_url = url_for('lab3.lab33')
+    css_path = url_for("static", filename="lab1.css")
     return '''
     <!doctype html>
     <html>
         <head>
             <title>НГТУ, ФБ, Лабораторные работы</title>
-            <style>
-                body { font-family: sans-serif; line-height: 1.6; padding: 20px; margin: 0 px; background-color: #f4f4f4; color: #333; }
-                header { text-align: center; border-bottom: 2px solid #0056b3; padding-bottom: 10px; margin-bottom: 20px; }
-                h1 { color: #0056b3; }
-                ul { list-style-type: none; padding: 0; }
-                li { margin-bottom: 10px; }
-                a { color: #333; text-decoration: none; font-weight: bold; padding: 8px 12px; border: 1px solid #ccc; border-radius: 5px; display: inline-block; transition: background-color 0.3s; }
-                nav a:hover { background-color: #e2e6ea; }
-                footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; font-size: 0.9em; color: #666; position: fixed; bottom: 0; right: 0; left: 0;}
-            </style>
+            <link rel="stylesheet" href="''' + css_path + '''">
         </head>
         <body>
             <header>
@@ -167,7 +162,8 @@ def index():
             </header>
             <ul>
                 <li><a href="''' + lab1_url + '''">Первая лабораторная</a></li>
-                <a href="''' + lab2_url + '''">Вторая лабораторная</a>
+                <li><a href="''' + lab2_url + '''">Вторая лабораторная</a></li>
+                <li><a href="''' + lab3_url + '''">Третья лабораторная</a></li>
             </ul>
             <footer>
                 <p>Черевцова Софья, ФБИ-34, 3 курс, 2025</p>

@@ -2,6 +2,26 @@ from flask import Blueprint, url_for, redirect, abort, render_template
 lab2 = Blueprint('lab2', __name__)
 
 
+@lab2.route('/lab2/')
+def lab22():
+    route_list = [
+        (name, address, desc)
+        for name, address, desc in LAB2_ROUTES
+    ]
+    links = []
+    links.append( (url_for('lab2.flowers', flower_id=0), '/lab2/flowers/0', 'Цветок №0') )
+    links.append( (url_for('lab2.add_flower', name='Роза'), '/lab2/add_flower/Роза', 'Добавить "Роза"') )
+    links.append( (url_for('lab2.calc_params', a=5, b=3), '/lab2/calc/5/3', 'Калькулятор 5 и 3') )
+    for route_name, route_path, route_desc in LAB2_ROUTES:
+        if route_name in ['flowers', 'add_flower', 'calc_params']:
+            continue          
+        try:
+            url = url_for('lab2.' + route_name)
+            links.append( (url, route_path, route_desc) )
+        except Exception as e:
+            links.append( (route_path, route_path, route_desc) )
+    return render_template('lab2.html', lab2_links=links)
+
 @lab2.route('/lab2/a')
 def a():
     return 'без слэша'
@@ -129,27 +149,6 @@ def example():
         {'name': 'манго', 'price': 321}
     ]
     return render_template('example.html', name=name, numlab=numlab, group=group, course=course, fruits=fruits)
-
-
-@lab2.route('/lab2/')
-def lab22():
-    route_list = [
-        (name, address, desc)
-        for name, address, desc in LAB2_ROUTES
-    ]
-    links = []
-    links.append( (url_for('lab2.flowers', flower_id=0), '/lab2/flowers/0', 'Цветок №0') )
-    links.append( (url_for('lab2.add_flower', name='Роза'), '/lab2/add_flower/Роза', 'Добавить "Роза"') )
-    links.append( (url_for('lab2.calc_params', a=5, b=3), '/lab2/calc/5/3', 'Калькулятор 5 и 3') )
-    for route_name, route_path, route_desc in LAB2_ROUTES:
-        if route_name in ['flowers', 'add_flower', 'calc_params']:
-            continue          
-        try:
-            url = url_for('lab2.' + route_name)
-            links.append( (url, route_path, route_desc) )
-        except Exception as e:
-            links.append( (route_path, route_path, route_desc) )
-    return render_template('lab2.html', lab2_links=links)
 
 
 @lab2.route('/lab2/filters')

@@ -17,23 +17,13 @@ def lab11():
     status_405_url = url_for('lab1.status_405')
     status_418_url = url_for('lab1.status_418')
     error_url = url_for('lab1.cause_error')
+    css_path = url_for("static", filename="lab1.css")
     return '''
     <!doctype html>
     <html>
         <head>
             <title>Лабораторная 1</title>
-            <style>
-                body { font-family: sans-serif; line-height: 1.6; padding: 20px; margin: auto; background-color: #f4f4f4; color: #333; }
-                p { font-size: 1.1em; }
-                a { color: #0056b3; text-decoration: none; font-weight: bold; }
-                a:hover { text-decoration: underline; }
-                .route-list { margin-top: 30px; }
-                .route-list h2 { color: #0056b3; }
-                .route-list ul { list-style-type: none; padding: 0; }
-                .route-list li { margin-bottom: 5px; }
-                .route-list a { padding: 5px 10px; border: 1px solid #ccc; border-radius: 5px; display: inline-block; }
-                .route-list a:hover { background-color: #e2e6ea; }
-            </style>
+            <link rel="stylesheet" href="''' + css_path + '''">
         </head>
         <body>
             <h1>Основы Flask</h1>
