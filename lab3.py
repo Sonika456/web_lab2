@@ -183,3 +183,93 @@ def train_ticket():
         'total_price': total_price
     }
     return render_template('/lab3/train_ticket.html', **ticket_data)
+
+
+smartphones = [
+    {'name': 'Galaxy A54', 'price': 32000, 'brand': 'Samsung', 'color': 'White'},
+    {'name': 'iPhone 13', 'price': 65000, 'brand': 'Apple', 'color': 'Starlight'},
+    {'name': 'Redmi Note 12', 'price': 15000, 'brand': 'Xiaomi', 'color': 'Black'},
+    {'name': 'Pixel 7a', 'price': 42000, 'brand': 'Google', 'color': 'Charcoal'},
+    {'name': 'Galaxy S23 Ultra', 'price': 110000, 'brand': 'Samsung', 'color': 'Phantom Black'},
+    {'name': 'iPhone 15 Pro', 'price': 135000, 'brand': 'Apple', 'color': 'Natural Titanium'},
+    {'name': 'Poco X5 Pro', 'price': 25000, 'brand': 'Xiaomi', 'color': 'Blue'},
+    {'name': 'Pixel 8', 'price': 68000, 'brand': 'Google', 'color': 'Mint'},
+    {'name': 'OnePlus 11', 'price': 55000, 'brand': 'OnePlus', 'color': 'Green'},
+    {'name': 'iPhone SE (2022)', 'price': 38000, 'brand': 'Apple', 'color': 'Red'},
+    {'name': 'Galaxy Z Fold5', 'price': 180000, 'brand': 'Samsung', 'color': 'Cream'},
+    {'name': 'Redmi 12', 'price': 12000, 'brand': 'Xiaomi', 'color': 'Silver'},
+    {'name': 'Pixel Fold', 'price': 195000, 'brand': 'Google', 'color': 'Obsidian'},
+    {'name': 'Nothing Phone (2)', 'price': 50000, 'brand': 'Nothing', 'color': 'Grey'},
+    {'name': 'iPhone 14', 'price': 58000, 'brand': 'Apple', 'color': 'Purple'},
+    {'name': 'Galaxy A34', 'price': 28000, 'brand': 'Samsung', 'color': 'Lime'},
+    {'name': 'Xiaomi 13T', 'price': 48000, 'brand': 'Xiaomi', 'color': 'Black'},
+    {'name': 'Pixel 6a', 'price': 35000, 'brand': 'Google', 'color': 'Sage'},
+    {'name': 'Galaxy S21 FE', 'price': 40000, 'brand': 'Samsung', 'color': 'Lavender'},
+    {'name': 'iPhone 12', 'price': 45000, 'brand': 'Apple', 'color': 'Blue'}
+]
+
+
+actual_min_price = min(item['price'] for item in smartphones)
+actual_max_price = max(item['price'] for item in smartphones)
+
+
+@lab3.route('/lab3/price_filter')
+def price_filter():
+    if request.args.get('reset') == '1':
+        resp = make_response(redirect(url_for('lab3.price_filter')))
+        resp.set_cookie('min_price', '', max_age=0)
+        resp.set_cookie('max_price', '', max_age=0)
+        return resp
+    
+    min_price = request.args.get('min_price')
+    max_price = request.args.get('max_price')
+    
+    if not min_price and not max_price:
+        min_price = request.cookies.get('min_price')
+        max_price = request.cookies.get('max_price')
+    
+    current_min = None
+    current_max = None
+    
+    try:
+        if min_price:
+            current_min = int(min_price)
+    except ValueError:
+        pass
+        
+    try:
+        if max_price:
+            current_max = int(max_price)
+    except ValueError:
+        pass
+
+    if current_min is not None and current_max is not None and current_min > current_max:
+        current_min, current_max = current_max, current_min
+    
+    if request.args.get('min_price') or request.args.get('max_price'):
+        resp = make_response(redirect(url_for('lab3.price_filter')))
+        resp.set_cookie('min_price', str(current_min) if current_min is not None else '')
+        resp.set_cookie('max_price', str(current_max) if current_max is not None else '')
+        return resp
+    
+    filtered_items = []
+    if current_min is None and current_max is None:
+        filtered_items = smartphones
+    else:
+        for item in smartphones:
+            price = item['price']
+            min_ok = current_min is None or price >= current_min
+            max_ok = current_max is None or price <= current_max
+            
+            if min_ok and max_ok:
+                filtered_items.append(item)
+    
+    template_data = {
+        'items': filtered_items,
+        'count': len(filtered_items),
+        'min_placeholder': actual_min_price,
+        'max_placeholder': actual_max_price,
+        'min_value': current_min if current_min is not None else '',
+        'max_value': current_max if current_max is not None else '',
+    }
+    return render_template('/lab3/price_filter.html', **template_data)
