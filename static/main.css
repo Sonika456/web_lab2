@@ -62,3 +62,67 @@ button {
 button:hover {
     background-color: #5C4133;
 }
+
+.price-tag {
+    color: #B58E6A; 
+    font-weight: bold;
+    margin-left: 10px;
+    font-size: 0.9em;
+}
+
+.choice-label {
+    display: block; 
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #D9C6B0; 
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.choice-label:hover {
+    background-color: #f7f3ed; 
+}
+
+.button-group {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+}
+
+.cancel-link {
+    color: #B58E6A; 
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.cancel-link:hover {
+    color: #6B4F3F; 
+}
+
+.success-message {
+    text-align: center;
+    background-color: #E6F7E6; 
+    color: #4C8E4C; 
+    border: 1px solid #B0E6B0;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.success-message h1 {
+    color: #4C8E4C;
+    border-bottom: 1px dashed #B0E6B0;
+    margin-bottom: 20px;
+
+}
+
+.alt-button {
+    background-color: #79a679; 
+    color: white;
+}
+
+.alt-button:hover {
+    background-color: #5d835d;
+}

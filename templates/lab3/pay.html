@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная paбoтa 3{% endblock %}
+
+{% block main %} 
+    <h1>Оплата заказа</h1>
+
+    <div class="price-summary">
+        Сумма к оплате: <strong>{{ price }}</strong> рублей.
+    </div>
+    
+    <form action="/lab3/success">
+        
+        <input type="hidden" name="price" value="{{ price }}">
+
+        <div>Номер банковской карты: </div>
+        <label>
+            <input type="text" name="card" pattern="\d{16}" required>
+        </label>
+
+        <div>Имя держателя карты: </div>
+        <label>
+            <input type="text" name="name" required>
+        </label>
+
+        <div>Hoмep CVV:</div>
+        <label>
+            <input type="text" name="cvv" size="3" pattern="\d{3}" required>
+        </label>
+
+        <div class="button-group">
+            <button type="submit">Оплатить ({{ price }} руб.)</button>
+            <a href="/lab3/order" class="cancel-link">Отказаться</a>
+        </div>
+    </form>
+{% endblock %}

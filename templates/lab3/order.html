@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная paбoтa 3{% endblock %}
+
+{% block main %}
+    <h1>Заказ напитка</h1>
+
+    <form action="/lab3/pay">
+        <h2>Напиток:</h2>
+        {% for id, item in menu.items() %}
+            <label class="choice-label">
+                <input type="radio" value="{{ id }}" name="drink">
+                {{ item.name }} 
+                <span class="price-tag">({{ item.price }} руб.)</span>
+            </label>
+        {% endfor %}
+
+        <h2>Добавки:</h2>
+        {% for id, item in additives.items() %}
+            <label class="choice-label">
+                <input type="checkbox" name="{{ id }}">
+                {{ item.name }}
+                <span class="price-tag">({{ item.price }} руб.)</span>
+            </label>
+        {% endfor %}
+
+        <div>
+            <button type="submit">Перейти к оплате</button>
+        </div>
+    </form>
+{% endblock %}

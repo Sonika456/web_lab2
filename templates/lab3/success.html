@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная paбoтa 3{% endblock %}
+
+{% block main %}
+    <div class="success-message">
+        <h1>✅ Заказ успешно оформлен!</h1>
+        <p>Спасибо, ваш заказ оплачен на сумму <strong>{{ price }}</strong> рублей, ожидайте доставку!</p>
+        
+        <div class="button-group">
+            <a href="/lab3/order">
+                <button type="button" class="alt-button">Сделать новый заказ</button>
+            </a>
+        </div>
+    </div>
+{% endblock %}
