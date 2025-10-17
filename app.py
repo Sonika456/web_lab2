@@ -77,6 +77,8 @@ def not_found(err):
         </body>
     </html>
     ''', 404
+
+
 @app.errorhandler(500)
 def handle_internal_server_error(e):
     return '''
@@ -113,6 +115,8 @@ def handle_internal_server_error(e):
       </body>
     </html>
     ''', 500
+
+
 @app.errorhandler(400)
 def bad_request(error):
     if request.path.strip('/') == 'lab2/add_flower':
@@ -132,6 +136,8 @@ def bad_request(error):
         </body>
     </html>
     ''', 400
+
+
 @app.route("/")
 @app.route("/index")
 def index():
@@ -168,12 +174,16 @@ def index():
     </html>
     '''
 
+
 @app.route('/lab2/a')
 def a():
     return 'без слэша'
+
+
 @app.route('/lab2/a/')
 def a2():
     return 'со слэшем'
+
 
 LAB2_ROUTES = [
     ('a', '/lab2/a', 'Роут без слэша'),
@@ -213,6 +223,7 @@ def flowers(flower_id):
         </html>
         '''
 
+
 @app.route('/lab2/add_flower/<name>')
 def add_flower(name):
     flower_list.append(name)
@@ -229,9 +240,13 @@ def add_flower(name):
         </body>
     </html>
 '''
+
+
 @app.route('/lab2/add_flower/')
 def add_flower_no_name():
     abort(400)
+
+
 @app.route('/lab2/all_flowers')
 def all_flowers():
     clear_url = url_for('clear_flowers')
@@ -257,6 +272,8 @@ def all_flowers():
         </body>
     </html>
     '''
+
+
 @app.route('/lab2/clear_flowers')
 def clear_flowers():
     flower_list = []
@@ -268,6 +285,8 @@ def clear_flowers():
         <p><a href="{all_flowers_url}">Посмотреть пустой список</a></p>
     </body></html>
     '''
+
+
 @app.route('/lab2/example')
 def example():
     name = 'Черевцова Софья'
@@ -282,6 +301,7 @@ def example():
         {'name': 'манго', 'price': 321}
     ]
     return render_template('example.html', name=name, numlab=numlab, group=group, course=course, fruits=fruits)
+
 
 @app.route('/lab2/')
 def lab2():
@@ -302,10 +322,14 @@ def lab2():
         except Exception as e:
             links.append( (route_path, route_path, route_desc) )
     return render_template('lab2.html', lab2_links=links)
+
+
 @app.route('/lab2/filters')
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
     return render_template('filter.html', phrase=phrase)
+
+
 @app.route('/lab2/calc/<int:a>/<int:b>')
 def calc_params(a, b):
     sum_res = a + b
@@ -329,12 +353,18 @@ def calc_params(a, b):
     </body>
     </html>
     '''
+
+
 @app.route('/lab2/calc/')
 def calc_default():
     return redirect(url_for('calc_params', a=1, b=1))
+
+
 @app.route('/lab2/calc/<int:a>')
 def calc_one_param(a):
     return redirect(url_for('calc_params', a=a, b=1))
+
+
 book_list = [
     {"author": "Джон Толкин", "title": "Властелин колец", "genre": "Фэнтези", "pages": 1178},
     {"author": "Джейн Остин", "title": "Гордость и предубеждение", "genre": "Роман", "pages": 432},
@@ -347,9 +377,12 @@ book_list = [
     {"author": "Стивен Кинг", "title": "Сияние", "genre": "Ужасы", "pages": 447},
     {"author": "Роберт Стивенсон", "title": "Остров сокровищ", "genre": "Приключения", "pages": 288},
 ]
+
 @app.route('/lab2/books')
 def book_list_view():
     return render_template('books.html', books=book_list, count=len(book_list))
+
+
 berry_list = [
     {"name": "Клубника", "description": "Одна из самых популярных садовых ягод, обладает ярким ароматом и сладким вкусом.", "img_url": "strawberry.jpg"},
     {"name": "Малина", "description": "Сладкая и сочная ягода, часто используется в народной медицине, особенно при простуде.", "img_url": "raspberry.jpg"},
@@ -372,6 +405,8 @@ berry_list = [
     {"name": "Калина", "description": "Ярко-красные горькие ягоды, которые собирают после первых морозов.", "img_url": "viburnum.jpg"},
     {"name": "Шелковица (тутовник)", "description": "Длинные, сочные ягоды белого, красного или черного цвета, очень сладкие.", "img_url": "mulberry.jpg"},
 ]
+
+
 @app.route('/lab2/berries')
 def berry_view():
     global berry_list

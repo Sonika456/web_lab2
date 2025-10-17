@@ -268,7 +268,7 @@ def status_418():
     </html>
     ''', 418
    
-   
+
 @lab1.route("/error")
 def cause_error():
     result = 0 / 1
