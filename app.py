@@ -149,12 +149,14 @@ def index():
     lab2_url = url_for('lab2.lab22')
     lab3_url = url_for('lab3.lab33')
     css_path = url_for("static", filename="lab1.css")
+    sakyra = url_for('static', filename="favicon2.ico")
     return '''
     <!doctype html>
     <html>
         <head>
             <title>НГТУ, ФБ, Лабораторные работы</title>
             <link rel="stylesheet" href="''' + css_path + '''">
+                <link rel="icon" type="image/x-icon" href="''' + sakyra + '''">
         </head>
         <body>
             <header>
