@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная paбoтa 3{% endblock %}
+
+{% block main %}
+    <h1>Настройки стиля страницы</h1>
+    <form>
+        
+        <h2>Основные настройки:</h2>
+        <div class="setting-item">
+            <label class="label" for="color">Цвет текста:</label>
+            <input type="color" id="color" name="color" value="{{ color or '' }}">
+        </div>
+    
+        <div class="setting-item">
+            <label class="label" for="background_color">Цвет фона:</label>
+            <input type="color" id="background_color" name="background_color" value="{{ background_color or '' }}">
+        </div>
+
+        <div class="setting-item">
+            <label class="label" for="font_size">Размер шрифта:</label>
+            <input type="number" id="font_size" name="font_size" value="{{ font_size or '' }}" min="12" max="30">
+        </div>
+        
+        <h2>Настройки main:</h2>
+
+        <div class="setting-item">
+            <label class="label" for="main_border_style">Стиль границы:</label>
+            <select id="main_border_style" name="main_border_style">
+                <option value="none" {% if main_border_style == 'none' %}selected{% endif %}>Нет</option>
+                <option value="dashed" {% if main_border_style == 'dashed' %}selected{% endif %}>Пунктирная</option>
+                <option value="solid" {% if main_border_style == 'solid' %}selected{% endif %}>Сплошная</option>
+                <option value="double" {% if main_border_style == 'double' %}selected{% endif %}>Двойная</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button type="submit">Применить</button>
+        </div>
+    </form>
+    
+    <style>
+        .setting-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px dashed #D9C6B0;
+            border-radius: 5px;
+        }
+        .label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
