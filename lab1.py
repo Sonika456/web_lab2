@@ -3,7 +3,7 @@ import datetime
 lab1 = Blueprint('lab1', __name__)
 
 @lab1.route("/lab1")
-def lab():
+def lab11():
     web_url = url_for('lab1.web')
     author_url = url_for('lab1.author')
     image_url = url_for('lab1.image')
