@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная paбoтa 3{% endblock %}
+
+{% block main %}
+    <div class="ticket-container">
+        <h1>Ваш железнодорожный билет</h1>
+        
+        <div class="ticket-info">
+            
+            <p><strong>Статус:</strong> <span class="ticket-type">{{ ticket_type }}</span></p>
+            <p><strong>Пассажир:</strong> {{ fio }} ({{ age }} лет)</p>
+            <p><strong>Маршрут:</strong> {{ departure }} → {{ destination }}</p>
+            <p><strong>Дата поездки:</strong> {{ date }}</p>
+            <p><strong>Место:</strong> 
+                {% if shelf == 'lower' %}Нижняя полка{% endif %}
+                {% if shelf == 'upper' %}Верхняя полка{% endif %}
+                {% if shelf == 'lower_side' %}Нижняя боковая полка{% endif %}
+                {% if shelf == 'upper_side' %}Верхняя боковая полка{% endif %}
+            </p>
+            
+            <div class="addons">
+                <h2>Включенные услуги:</h2>
+                <ul>
+                    <li>{{ "✅" if with_linen else "❌" }} С бельём</li>
+                    <li>{{ "✅" if with_baggage else "❌" }} С багажом</li>
+                    <li>{{ "✅" if with_insurance else "❌" }} Со страховкой</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="total-price">
+            <p>Итоговая стоимость:</p>
+            <span class="price-value">{{ total_price }} руб.</span>
+        </div>
+
+        <div class="button-group">
+            <a href="{{ url_for('lab3.train_ticket') }}" class="cancel-link">
+                Сделать новый заказ
+            </a>
+        </div>
+    </div>
+    
+    <style>
+        .ticket-container {
+            border: 3px solid #6B4F3F;
+            border-radius: 12px;
+            padding: 30px;
+            background-color: #FFFDF9;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ticket-type {
+            font-weight: bold;
+            color: {{ '#D35400' if ticket_type == 'Детский билет' else '#6B4F3F' }};
+            border-bottom: 2px dashed;
+        }
+
+        .ticket-info p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .addons ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+        .addons li {
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+        
+        .total-price {
+            text-align: right;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px dashed #B58E6A;
+        }
+        .total-price p {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+        .price-value {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #6B4F3F;
+        }
+    </style>
+{% endblock %}

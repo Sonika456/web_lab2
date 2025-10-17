@@ -110,3 +110,67 @@ def settings():
     resp = make_response(render_template('lab3/settings.html', color=color, background_color=background_color, 
                                          font_size=font_size, main_border_style=main_border_style))
     return resp
+
+
+
+@lab3.route('/lab3/train_ticket')
+def train_ticket():
+    if not request.args:
+        return render_template('/lab3/train_ticket_form.html')
+    
+    fio = request.args.get('fio', '').strip()
+    shelf = request.args.get('shelf')
+    age_str = request.args.get('age', '').strip()
+    departure = request.args.get('departure', '').strip()
+    destination = request.args.get('destination', '').strip()
+    date = request.args.get('date', '').strip()
+    
+    with_linen = request.args.get('with_linen') == 'on'
+    with_baggage = request.args.get('with_baggage') == 'on'
+    with_insurance = request.args.get('with_insurance') == 'on'
+    
+    errors = []
+    
+    if not all([fio, shelf, age_str, departure, destination, date]):
+        errors.append("Все поля (ФИО, полка, возраст, пункты, дата) должны быть заполнены.")
+
+    try:
+        age = int(age_str)
+        if not (1 <= age <= 120):
+            errors.append("Возраст должен быть от 1 до 120 лет.")
+    except ValueError:
+        errors.append("Возраст должен быть целым числом.")
+    
+    if errors:
+        return render_template('/lab3/train_ticket_form.html', errors=errors, fio=fio, shelf=shelf, age=age_str, 
+                               departure=departure, destination=destination, date=date,
+                               with_linen=with_linen, with_baggage=with_baggage, with_insurance=with_insurance)
+
+    is_child = age < 18
+    ticket_type = "Детский билет" if is_child else "Взрослый билет"
+    
+    total_price = 700 if is_child else 1000
+    
+    if shelf in ['lower', 'lower_side']:
+        total_price += 100
+    if with_linen:
+        total_price += 75
+    if with_baggage:
+        total_price += 250
+    if with_insurance:
+        total_price += 150
+    
+    ticket_data = {
+        'fio': fio,
+        'age': age,
+        'ticket_type': ticket_type,
+        'shelf': shelf,
+        'departure': departure,
+        'destination': destination,
+        'date': date,
+        'with_linen': with_linen,
+        'with_baggage': with_baggage,
+        'with_insurance': with_insurance,
+        'total_price': total_price
+    }
+    return render_template('/lab3/train_ticket.html', **ticket_data)

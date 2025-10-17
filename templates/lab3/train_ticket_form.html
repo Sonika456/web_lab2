@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная paбoтa 3{% endblock %}
+
+{% block main %}
+    <h1>🪪 Заказ железнодорожного билета</h1>
+
+    {% if errors %}
+        {% for error in errors %}
+            <div class="error">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form>
+        
+        <h2>Данные пассажира</h2>
+        
+        <div class="setting-item">
+            <label class="label" for="fio">ФИО пассажира (обязательно):</label>
+            <input type="text" id="fio" name="fio" value="{{ fio or '' }}" required>
+        </div>
+        
+        <div class="setting-item">
+            <label class="label" for="age">Возраст (1–120 лет):</label>
+            <input type="number" id="age" name="age" value="{{ age or '' }}" required min="1" max="120">
+        </div>
+        
+        <div class="setting-item">
+            <label class="label" for="shelf">Полка (обязательно):</label>
+            <select id="shelf" name="shelf" required>
+                <option value="" disabled {% if not shelf %}selected{% endif %}>Выберите тип полки</option>
+                <option value="lower" {% if shelf == 'lower' %}selected{% endif %}>Нижняя (+100 руб.)</option>
+                <option value="upper" {% if shelf == 'upper' %}selected{% endif %}>Верхняя</option>
+                <option value="lower_side" {% if shelf == 'lower_side' %}selected{% endif %}>Нижняя боковая (+100 руб.)</option>
+                <option value="upper_side" {% if shelf == 'upper_side' %}selected{% endif %}>Верхняя боковая</option>
+            </select>
+        </div>
+        
+        <h2>Маршрут и дата</h2>
+
+        <div class="setting-item">
+            <label class="label" for="departure">Пункт выезда:</label>
+            <input type="text" id="departure" name="departure" value="{{ departure or '' }}" required>
+        </div>
+
+        <div class="setting-item">
+            <label class="label" for="destination">Пункт назначения:</label>
+            <input type="text" id="destination" name="destination" value="{{ destination or '' }}" required>
+        </div>
+        
+        <div class="setting-item">
+            <label class="label" for="date">Дата поездки:</label>
+            <input type="date" id="date" name="date" value="{{ date or '' }}" required>
+        </div>
+
+        <h2>Дополнительные услуги</h2>
+
+        <div class="setting-item checkbox-group">
+            <label class="label">Опции:</label>
+            <label>
+                <input type="checkbox" name="with_linen" {% if with_linen %}checked{% endif %}> С бельём (+75 руб.)
+            </label>
+            <label>
+                <input type="checkbox" name="with_baggage" {% if with_baggage %}checked{% endif %}> С багажом (+250 руб.)
+            </label>
+            <label>
+                <input type="checkbox" name="with_insurance" {% if with_insurance %}checked{% endif %}> Нужна ли страховка (+150 руб.)
+            </label>
+        </div>
+        
+        <div class="button-group">
+            <button type="submit">Сформировать билет</button>
+        </div>
+    </form>
+{% endblock %}
