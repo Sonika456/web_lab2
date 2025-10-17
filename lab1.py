@@ -18,6 +18,7 @@ def lab11():
     status_418_url = url_for('lab1.status_418')
     error_url = url_for('lab1.cause_error')
     css_path = url_for("static", filename="lab1.css")
+    index_url = url_for('index')
     return '''
     <!doctype html>
     <html>
@@ -32,7 +33,7 @@ def lab11():
                 Werkzeug, а также шаблонизатор Jinja2. Относится к категории так называемых микрофреймворков — минималистичных 
                 каркасов веб-приложений, сознательно предоставляющих лишь самые базовые возможности.
             </p>
-
+            <a href="''' + index_url + '''">На главную страницу</a>
             <div class="route-list">
                 <h2>Список роутов</h2>
                 <ul>

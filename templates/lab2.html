@@ -7,6 +7,7 @@
 {% block main %}
     <h1>Шаблоны</h1>
     <div>Тема лабораторной - шаблоны. Список сделанных страниц</div>
+    <a href="{{index_url}}">На главную страницу</a>
     <ol>
         {% for url, path, desc in lab2_links %}
             <li style="margin-bottom: 10px;">

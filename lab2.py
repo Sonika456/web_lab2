@@ -4,6 +4,7 @@ lab2 = Blueprint('lab2', __name__)
 
 @lab2.route('/lab2/')
 def lab22():
+    index_url = url_for('index')
     route_list = [
         (name, address, desc)
         for name, address, desc in LAB2_ROUTES
@@ -20,7 +21,7 @@ def lab22():
             links.append( (url, route_path, route_desc) )
         except Exception as e:
             links.append( (route_path, route_path, route_desc) )
-    return render_template('lab2.html', lab2_links=links)
+    return render_template('lab2.html', lab2_links=links, index_url=index_url)
 
 @lab2.route('/lab2/a')
 def a():
