@@ -112,6 +112,15 @@ def settings():
     return resp
 
 
+@lab3.route('/lab3/reset_settings')
+def reset_settings():  
+    resp = make_response(redirect(url_for('lab3.settings')))
+    resp.set_cookie('color', '', max_age=0)
+    resp.set_cookie('background_color', '', max_age=0)
+    resp.set_cookie('font_size', '', max_age=0)
+    resp.set_cookie('main_border_style', '', max_age=0)
+    return resp
+
 
 @lab3.route('/lab3/train_ticket')
 def train_ticket():
