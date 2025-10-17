@@ -148,7 +148,7 @@ def index():
     lab1_url = url_for('lab1.lab11')
     lab2_url = url_for('lab2.lab22')
     lab3_url = url_for('lab3.lab33')
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="/lab1/lab1.css")
     sakyra = url_for('static', filename="favicon2.ico")
     return '''
     <!doctype html>
