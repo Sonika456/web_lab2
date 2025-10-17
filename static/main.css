@@ -1,10 +1,10 @@
 body {
-    background-color: #FFF7E6; 
+    background-color: rgb(255, 247, 230); 
     font-family: 'Georgia', serif; 
     margin: 0;
     padding: 0;
     line-height: 1.7; 
-    color: #6B4F3F;
+    color: rgb(107, 79, 63);
     min-height: 100vh;
     display: flex;
     flex-direction: column;

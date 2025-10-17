@@ -21,7 +21,7 @@ def lab22():
             links.append( (url, route_path, route_desc) )
         except Exception as e:
             links.append( (route_path, route_path, route_desc) )
-    return render_template('lab2.html', lab2_links=links, index_url=index_url)
+    return render_template('/lab2/lab2.html', lab2_links=links, index_url=index_url)
 
 @lab2.route('/lab2/a')
 def a():
@@ -149,13 +149,13 @@ def example():
         {'name': 'мандарины', 'price': 95},
         {'name': 'манго', 'price': 321}
     ]
-    return render_template('example.html', name=name, numlab=numlab, group=group, course=course, fruits=fruits)
+    return render_template('/lab2/example.html', name=name, numlab=numlab, group=group, course=course, fruits=fruits)
 
 
 @lab2.route('/lab2/filters')
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
-    return render_template('filter.html', phrase=phrase)
+    return render_template('/lab2/filter.html', phrase=phrase)
 
 
 @lab2.route('/lab2/calc/<int:a>/<int:b>')
@@ -208,34 +208,34 @@ book_list = [
 
 @lab2.route('/lab2/books')
 def book_list_view():
-    return render_template('books.html', books=book_list, count=len(book_list))
+    return render_template('/lab2/books.html', books=book_list, count=len(book_list))
 
 
 berry_list = [
-    {"name": "Клубника", "description": "Одна из самых популярных садовых ягод, обладает ярким ароматом и сладким вкусом.", "img_url": "strawberry.jpg"},
-    {"name": "Малина", "description": "Сладкая и сочная ягода, часто используется в народной медицине, особенно при простуде.", "img_url": "raspberry.jpg"},
-    {"name": "Ежевика", "description": "Темная, почти черная ягода с терпким вкусом, богата антиоксидантами.", "img_url": "blackberry.jpg"},
-    {"name": "Голубика", "description": "Мелкая синяя ягода, ценится за содержание витаминов и улучшение зрения.", "img_url": "blueberry.jpg"},
-    {"name": "Черника", "description": "Темно-синяя ягода, часто пачкает руки и язык. Известна лечебными свойствами.", "img_url": "bilberry.jpg"},
-    {"name": "Смородина красная", "description": "Кислая, ярко-красная ягода, идеальна для желе и морсов.", "img_url": "redcurrant.jpg"},
-    {"name": "Смородина черная", "description": "Ароматная ягода с высоким содержанием витамина C.", "img_url": "blackcurrant.jpg"},
-    {"name": "Крыжовник", "description": "Крупная, зеленая или красная ягода, часто с легким пушком. Используется для варенья.", "img_url": "gooseberry.jpg"},
-    {"name": "Вишня", "description": "Сладкая или кисло-сладкая косточковая ягода, популярна в выпечке.", "img_url": "cherry.jpg"},
-    {"name": "Черешня", "description": "Более крупная и обычно более сладкая версия вишни, красного или желтого цвета.", "img_url": "sweetcherry.jpg"},
-    {"name": "Облепиха", "description": "Ягода оранжевого цвета, очень кислая, богата маслами и витаминами.", "img_url": "seabuckthorn.jpg"},
-    {"name": "Клюква", "description": "Красная болотная ягода с очень кислым вкусом, известна как природный антисептик.", "img_url": "cranberry.jpg"},
-    {"name": "Брусника", "description": "Красная лесная ягода с горчинкой, хорошо хранится.", "img_url": "lingonberry.jpg"},
-    {"name": "Земляника", "description": "Дикая лесная ягода, ароматнее и мельче садовой клубники.", "img_url": "wildstrawberry.jpg"},
-    {"name": "Арбуз", "description": "Гигантская ягода с сочной красной мякотью и черными семечками.", "img_url": "watermelon.jpg"},
-    {"name": "Дыня", "description": "Крупная, сладкая ягода с волокнистой мякотью и мускусным ароматом.", "img_url": "melon.jpg"},
-    {"name": "Кизил", "description": "Красная, овальная, кислая ягода, часто используется для приготовления соусов и настоек.", "img_url": "corneliancherry.jpg"},
-    {"name": "Ирга", "description": "Сладкая, сине-черная ягода, похожая на чернику, растет на кустарниках.", "img_url": "shadbush.jpg"},
-    {"name": "Калина", "description": "Ярко-красные горькие ягоды, которые собирают после первых морозов.", "img_url": "viburnum.jpg"},
-    {"name": "Шелковица (тутовник)", "description": "Длинные, сочные ягоды белого, красного или черного цвета, очень сладкие.", "img_url": "mulberry.jpg"},
+    {"name": "Клубника", "description": "Одна из самых популярных садовых ягод, обладает ярким ароматом и сладким вкусом.", "img_url": "/lab2/strawberry.jpg"},
+    {"name": "Малина", "description": "Сладкая и сочная ягода, часто используется в народной медицине, особенно при простуде.", "img_url": "/lab2/raspberry.jpg"},
+    {"name": "Ежевика", "description": "Темная, почти черная ягода с терпким вкусом, богата антиоксидантами.", "img_url": "/lab2/blackberry.jpg"},
+    {"name": "Голубика", "description": "Мелкая синяя ягода, ценится за содержание витаминов и улучшение зрения.", "img_url": "/lab2/blueberry.jpg"},
+    {"name": "Черника", "description": "Темно-синяя ягода, часто пачкает руки и язык. Известна лечебными свойствами.", "img_url": "/lab2/bilberry.jpg"},
+    {"name": "Смородина красная", "description": "Кислая, ярко-красная ягода, идеальна для желе и морсов.", "img_url": "/lab2/redcurrant.jpg"},
+    {"name": "Смородина черная", "description": "Ароматная ягода с высоким содержанием витамина C.", "img_url": "/lab2/blackcurrant.jpg"},
+    {"name": "Крыжовник", "description": "Крупная, зеленая или красная ягода, часто с легким пушком. Используется для варенья.", "img_url": "/lab2/gooseberry.jpg"},
+    {"name": "Вишня", "description": "Сладкая или кисло-сладкая косточковая ягода, популярна в выпечке.", "img_url": "/lab2/cherry.jpg"},
+    {"name": "Черешня", "description": "Более крупная и обычно более сладкая версия вишни, красного или желтого цвета.", "img_url": "/lab2/sweetcherry.jpg"},
+    {"name": "Облепиха", "description": "Ягода оранжевого цвета, очень кислая, богата маслами и витаминами.", "img_url": "/lab2/seabuckthorn.jpg"},
+    {"name": "Клюква", "description": "Красная болотная ягода с очень кислым вкусом, известна как природный антисептик.", "img_url": "/lab2/cranberry.jpg"},
+    {"name": "Брусника", "description": "Красная лесная ягода с горчинкой, хорошо хранится.", "img_url": "/lab2/lingonberry.jpg"},
+    {"name": "Земляника", "description": "Дикая лесная ягода, ароматнее и мельче садовой клубники.", "img_url": "/lab2/wildstrawberry.jpg"},
+    {"name": "Арбуз", "description": "Гигантская ягода с сочной красной мякотью и черными семечками.", "img_url": "/lab2/watermelon.jpg"},
+    {"name": "Дыня", "description": "Крупная, сладкая ягода с волокнистой мякотью и мускусным ароматом.", "img_url": "/lab2/melon.jpg"},
+    {"name": "Кизил", "description": "Красная, овальная, кислая ягода, часто используется для приготовления соусов и настоек.", "img_url": "/lab2/corneliancherry.jpg"},
+    {"name": "Ирга", "description": "Сладкая, сине-черная ягода, похожая на чернику, растет на кустарниках.", "img_url": "/lab2/shadbush.jpg"},
+    {"name": "Калина", "description": "Ярко-красные горькие ягоды, которые собирают после первых морозов.", "img_url": "/lab2/viburnum.jpg"},
+    {"name": "Шелковица (тутовник)", "description": "Длинные, сочные ягоды белого, красного или черного цвета, очень сладкие.", "img_url": "/lab2/mulberry.jpg"},
 ]
 
 
 @lab2.route('/lab2/berries')
 def berry_view():
     global berry_list
-    return render_template('berries.html', berries=berry_list, count=len(berry_list))
+    return render_template('/lab2/berries.html', berries=berry_list, count=len(berry_list))

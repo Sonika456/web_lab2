@@ -17,7 +17,7 @@ def lab11():
     status_405_url = url_for('lab1.status_405')
     status_418_url = url_for('lab1.status_418')
     error_url = url_for('lab1.cause_error')
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="/lab1/lab1.css")
     index_url = url_for('index')
     return '''
     <!doctype html>
@@ -90,8 +90,8 @@ def author():
 
 @lab1.route("/lab1/image")
 def image():
-    image_path = url_for("static", filename="oak.jpg")
-    css_path = url_for("static", filename="lab1.css")
+    image_path = url_for("static", filename="/lab1/oak.jpg")
+    css_path = url_for("static", filename="/lab1/lab1.css")
     headers = {
         'Content-Language': 'ru',
         'X-Generator': 'Flask-lab1',

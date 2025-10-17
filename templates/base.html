@@ -24,9 +24,9 @@
         main {
             {% if request.cookies.get('main_border_style') and request.cookies.get('main_border_style') != 'none' %}
             border: 3px {{ request.cookies.get('main_border_style') }} #B58E6A;
-            padding: 47px 17px !important;
+            padding: 47px 17px;
             {% else %}
-            border: none !important;
+            border: none;
             {% endif %}
         }
     </style>
