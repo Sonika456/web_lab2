@@ -3,11 +3,13 @@ import datetime
 from lab1 import lab1
 from lab2 import lab2
 from lab3 import lab3
+from lab4 import lab4
 
 app = Flask(__name__)
 app.register_blueprint(lab1)
 app.register_blueprint(lab2)
 app.register_blueprint(lab3)
+app.register_blueprint(lab4)
 
 log_entries = []
 @app.errorhandler(404)
@@ -148,6 +150,7 @@ def index():
     lab1_url = url_for('lab1.lab11')
     lab2_url = url_for('lab2.lab22')
     lab3_url = url_for('lab3.lab33')
+    lab4_url = url_for('lab4.lab44')
     css_path = url_for("static", filename="/lab1/lab1.css")
     sakyra = url_for('static', filename="favicon2.ico")
     return '''
@@ -166,6 +169,7 @@ def index():
                 <li><a href="''' + lab1_url + '''">Первая лабораторная</a></li>
                 <li><a href="''' + lab2_url + '''">Вторая лабораторная</a></li>
                 <li><a href="''' + lab3_url + '''">Третья лабораторная</a></li>
+                <li><a href="''' + lab4_url + '''">Четвертая лабораторная</a></li>
             </ul>
             <footer>
                 <p>Черевцова Софья, ФБИ-34, 3 курс, 2025</p>
