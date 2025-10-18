@@ -156,7 +156,7 @@ def index():
         <head>
             <title>НГТУ, ФБ, Лабораторные работы</title>
             <link rel="stylesheet" href="''' + css_path + '''">
-                <link rel="icon" type="image/x-icon" href="''' + sakyra + '''">
+            <link rel="icon" type="image/x-icon" href="''' + sakyra + '''">
         </head>
         <body>
             <header>
