@@ -277,3 +277,55 @@ def fridge():
         message = f'Установлена температура: {temp}°С'
         snowflakes = '❄️'
     return render_template('lab4/fridge.html', message=message, snowflakes=snowflakes, saved_temp=temp_str, is_success=True if snowflakes else False)
+
+
+GRAIN_PRICES = {
+    'ячмень': 12000,
+    'овёс': 8500,
+    'пшеница': 9000,
+    'рожь': 15000,
+}
+MAX_ORDER_WEIGHT = 100
+BULK_DISCOUNT_THRESHOLD = 10
+BULK_DISCOUNT_RATE = 0.10 
+@lab4.route('/lab4/order_grain', methods = ['GET', 'POST'])
+def order_grain():
+    if request.method == 'GET':
+        return render_template('lab4/order_grain.html', prices=GRAIN_PRICES)
+    selected_grain = request.form.get('grain_type')
+    weight_str = request.form.get('weight')
+    error = None
+    discount_applied = False
+    if not weight_str:
+        error = 'Ошибка: не указан вес заказа.'
+        return render_template('lab4/order_grain.html', prices=GRAIN_PRICES, error=error, selected_grain=selected_grain)
+    try:
+        weight = float(weight_str)
+    except ValueError:
+        error = 'Ошибка: вес должен быть числом.'
+        return render_template('lab4/order_grain.html', prices=GRAIN_PRICES, error=error, selected_grain=selected_grain)
+    if weight <= 0:
+        error = 'Ошибка: вес заказа должен быть больше 0 тонн.'
+    elif weight > MAX_ORDER_WEIGHT:
+        error = f'Такого объёма ({weight} т) сейчас нет в наличии. Максимальный заказ: {MAX_ORDER_WEIGHT} т.'
+    if error:
+        return render_template('lab4/order_grain.html', prices=GRAIN_PRICES, error=error, selected_grain=selected_grain, saved_weight=weight_str)
+    price_per_ton = GRAIN_PRICES.get(selected_grain, 0)
+    total_cost = weight * price_per_ton
+    discount_amount = 0
+    if weight > BULK_DISCOUNT_THRESHOLD:
+        discount_amount = total_cost * BULK_DISCOUNT_RATE
+        total_cost -= discount_amount
+        discount_applied = True
+    result_message = f"""
+        Заказ успешно сформирован. Вы заказали {selected_grain}.
+        Вес: {weight} т.
+        Стоимость без скидки: {weight * price_per_ton:.2f} руб.
+    """
+    if discount_applied:
+        result_message += f"""
+        Применена скидка за большой объём ({BULK_DISCOUNT_RATE * 100:.0f}%).
+        Размер скидки: {discount_amount:.2f} руб.
+        """
+    result_message += f"Сумма к оплате: {total_cost:.2f} руб."
+    return render_template('lab4/order_grain.html', prices=GRAIN_PRICES, result=result_message)

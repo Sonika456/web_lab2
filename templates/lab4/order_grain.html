@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block lab %}Заказ зерна{% endblock %}
+
+{% block main %}
+    <h1>Форма заказа зерна</h1>
+    <div style="border: 2px solid #a8dadc; padding: 20px; border-radius: 8px; max-width: 500px; margin: 20px auto;">
+        <h2>Цены (за тонну):</h2>
+        <ul style="list-style: none; padding: 0;">
+            {% for grain, price in prices.items() %}
+                <li>{{ grain.capitalize() }}: {{ price }} руб/т</li>
+            {% endfor %}
+            <li style="margin-top: 10px; font-weight: bold;">Скидка: 10% при заказе более 10 тонн.</li>
+            <li style="color: red;">Максимальный заказ: 100 тонн.</li>
+        </ul>
+        <hr>
+        {% if result %}
+            <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <p>{{ result|safe }}</p>
+            </div>
+            <a href="{{ url_for('lab4.order_grain') }}">Сделать новый заказ</a>
+        {% else %}
+            {% if error %}
+                <div style="color: red; font-weight: bold; font-style: italic; margin-bottom: 15px;">{{ error }}</div>
+            {% endif %}
+            <form method="post" action="{{ url_for('lab4.order_grain') }}">
+                <div>
+                    <label for="grain_type">Выберите зерно:</label>
+                    <select id="grain_type" name="grain_type">
+                        {% for grain in prices.keys() %}
+                            <option value="{{ grain }}" {% if grain == selected_grain %}selected{% endif %}>
+                                {{ grain.capitalize() }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-top: 15px;">
+                    <label for="weight">Вес заказа (в тоннах):</label>
+                    <input type="number" id="weight" name="weight" step="0.1" min="0.01" placeholder="Например, 12.5"
+                           value="{{ saved_weight if saved_weight }}">
+                </div>
+                <div style="margin-top: 20px;">
+                    <button type="submit">Рассчитать и заказать</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
