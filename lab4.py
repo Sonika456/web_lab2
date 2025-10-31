@@ -121,31 +121,127 @@ users = [
 @lab4.route('/lab4/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        if 'name' in session:
+        if 'user_login' in session:
+            current_user = next((u for u in users if u['login'] == session['user_login']), None)
             authorized = True
-            name = session['name']
+            name = current_user['name'] if current_user else session['user_login']
         else:
             authorized = False 
             name = ''
-        return render_template('lab4/login.html', authorized=authorized, name=name)
-    login = request.form.get('login') 
+        register_url = url_for('lab4.register') 
+        return render_template('lab4/login.html', authorized=authorized, name=name, register_url=register_url)
+    login_input = request.form.get('login') 
     password = request.form.get('password')
     error = None
-    if not login:
+    if not login_input:
         error = 'Не введён логин'
     elif not password:
         error = 'Не введён пароль'
     if error:
-        return render_template('lab4/login.html', error=error, authorized=False, login=login)
+        return render_template('lab4/login.html', error=error, authorized=False, saved_login=login_input)
     for user in users:
-        if login == user['login'] and password == user['password']:
-            session['name'] = user['name']
-            return redirect('/lab4/login')
+        if login_input == user['login'] and password == user['password']:
+            session['user_login'] = user['login']
+            session['user_name'] = user['name'] 
+            return redirect(url_for('lab4.login'))
     error = 'Неверные логин и/или пароль'
-    return render_template('lab4/login.html', error=error, authorized=False, login=login)
+    return render_template('lab4/login.html', error=error, authorized=False, saved_login=login_input)
 
 
 @lab4.route('/lab4/logout', methods = ['POST'])
 def logout():
-    session.pop('name', None)
-    return redirect('/lab4/login')
+    session.pop('user_login', None)
+    session.pop('user_name', None)
+    return redirect(url_for('lab4.login'))
+    
+
+@lab4.route('/lab4/register', methods = ['GET', 'POST'])
+def register():
+    register_url = url_for('lab4.register')
+    if request.method == 'GET':
+        return render_template('lab4/register.html')
+    login_input = request.form.get('login') 
+    name = request.form.get('name')
+    password = request.form.get('password')
+    password_confirm = request.form.get('password_confirm')
+    if not login_input or not name or not password or not password_confirm:
+        error = 'Все поля должны быть заполнены!'
+        return render_template('lab4/register.html', error=error, login=login_input, name=name)
+    if password != password_confirm:
+        error = 'Пароль и подтверждение не совпадают.'
+        return render_template('lab4/register.html', error=error, login=login_input, name=name)
+    if any(user['login'] == login_input for user in users):
+        error = 'Этот логин уже занят.'
+        return render_template('lab4/register.html', error=error, login=login_input, name=name)
+    new_user = {
+        'login': login_input,
+        'password': password,
+        'name': name,
+        'gender': 'unknown' 
+    }
+    users.append(new_user)
+    session['user_login'] = login_input
+    session['user_name'] = name
+    return redirect(url_for('lab4.login'))
+
+
+@lab4.route('/lab4/users')
+def users_list():
+    if 'user_login' not in session:
+        return redirect(url_for('lab4.login'))
+    delete_url = url_for('lab4.delete_profile')
+    edit_url = url_for('lab4.edit_profile')
+    current_login = session['user_login']
+    users_display = [{'login': u['login'], 'name': u['name']} for u in users]
+    return render_template('lab4/users.html', users=users_display, current_login=current_login, delete_url=delete_url, edit_url=edit_url)
+
+
+@lab4.route('/lab4/edit', methods = ['GET', 'POST'])
+def edit_profile():
+    if 'user_login' not in session:
+        return redirect(url_for('lab4.login')) 
+    current_login = session['user_login']
+    user_index = next((i for i, u in enumerate(users) if u['login'] == current_login), -1)
+    if user_index == -1:
+        session.pop('user_login', None)
+        session.pop('user_name', None)
+        return redirect(url_for('lab4.login'))
+    current_user = users[user_index]
+    if request.method == 'GET':
+        return render_template('lab4/edit_profile.html', 
+                               login=current_user['login'], 
+                               name=current_user['name'])
+    new_login = request.form.get('login') 
+    new_name = request.form.get('name')
+    new_password = request.form.get('password')
+    password_confirm = request.form.get('password_confirm')
+    error = None
+    if not new_login or not new_name:
+        error = 'Логин и Имя не могут быть пустыми!'
+    if new_password or password_confirm:
+        if new_password != password_confirm:
+            error = 'Пароль и подтверждение не совпадают.'
+    if not error and new_login != current_login and any(u['login'] == new_login for u in users):
+        error = 'Этот логин уже занят другим пользователем.'
+    if error:
+        return render_template('lab4/edit_profile.html', error=error, login=new_login, name=new_name)
+    users[user_index]['name'] = new_name
+    if new_password and new_password == password_confirm:
+        users[user_index]['password'] = new_password
+    if new_login != current_login:
+        users[user_index]['login'] = new_login
+        session['user_login'] = new_login
+    session['user_name'] = new_name
+    return redirect(url_for('lab4.users_list'))
+
+
+@lab4.route('/lab4/delete', methods = ['POST'])
+def delete_profile():
+    if 'user_login' not in session:
+        return redirect(url_for('lab4.login'))
+    current_login = session['user_login']
+    global users 
+    users = [u for u in users if u['login'] != current_login]
+    session.pop('user_login', None)
+    session.pop('user_name', None)
+    return redirect(url_for('lab4.login'))
