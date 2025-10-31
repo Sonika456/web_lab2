@@ -245,3 +245,35 @@ def delete_profile():
     session.pop('user_login', None)
     session.pop('user_name', None)
     return redirect(url_for('lab4.login'))
+
+
+@lab4.route('/lab4/fridge', methods = ['GET', 'POST'])
+def fridge():
+    fridge_form_url = url_for('lab4.fridge')
+    if request.method == 'GET':
+        return render_template('lab4/fridge.html', message=None)
+    temp_str = request.form.get('temperature')
+    message = ''
+    snowflakes = ''
+    if not temp_str:
+        message = 'Ошибка: не задана температура'
+        return render_template('lab4/fridge.html', message=message, saved_temp=temp_str) 
+    try:
+        temp = float(temp_str)
+    except ValueError:
+        message = 'Ошибка: введено некорректное значение температуры'
+        return render_template('lab4/fridge.html', message=message, saved_temp=temp_str)
+    if temp < -12:
+        message = f'Не удалось установить температуру — слишком низкое значение ({temp}°С)'
+    elif temp > -1:
+        message = f'Не удалось установить температуру — слишком высокое значение ({temp}°С)'
+    elif -12 <= temp <= -9:
+        message = f'Установлена температура: {temp}°С'
+        snowflakes = '❄️❄️❄️'
+    elif -8 <= temp <= -5:
+        message = f'Установлена температура: {temp}°С'
+        snowflakes = '❄️❄️'
+    elif -4 <= temp <= -1:
+        message = f'Установлена температура: {temp}°С'
+        snowflakes = '❄️'
+    return render_template('lab4/fridge.html', message=message, snowflakes=snowflakes, saved_temp=temp_str, is_success=True if snowflakes else False)
