@@ -70,7 +70,6 @@ def sub_numbers():
     sub_form_url = url_for('lab4.sub_form')
     if x1 == '' or x2 == '':
         return render_template('lab4/sub.html', error='Ошибка: Оба поля должны быть заполнены для вычитания!', sub_form_url=sub_form_url)
-
     x1 = int(x1)
     x2 = int(x2)
     result = x1 - x2
@@ -86,15 +85,25 @@ def power_numbers():
     x1 = request.form.get('x1')
     x2 = request.form.get('x2')
     power_form_url = url_for('lab4.power_form')
-
     if x1 == '' or x2 == '':
         return render_template('lab4/power.html', error='Ошибка: Оба поля должны быть заполнены для возведения в степень!', power_form_url=power_form_url)
-
     x1 = int(x1)
     x2 = int(x2)
-
     if x1 == 0 and x2 == 0:
         return render_template('lab4/power.html', error='Ошибка: выражение 0^0 является неопределенным! Пожалуйста, измените хотя бы одно число.', power_form_url=power_form_url)
-    
     result = x1 ** x2
     return render_template('lab4/power.html', x1=x1, x2=x2, result=result, power_form_url=power_form_url)
+
+
+tree_count=0
+@lab4.route('/lab4/tree', methods = ['GET', 'POST'])
+def tree():
+    global tree_count
+    if request.method == 'GET':
+        return render_template('lab4/tree.html', tree_count=tree_count)
+    operation = request. form.get('operation')
+    if operation == 'cut':
+        tree_count -= 1
+    elif operation == 'plant':
+        tree_count += 1
+    return render_template('lab4/tree.html', tree_count = tree_count)
