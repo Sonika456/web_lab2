@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <style>
+        .success-message {
+            margin-top: 50px;
+            padding: 20px;
+            border: 1px solid #2196F3;
+            background-color: #e3f2fd;
+            color: #0d47a1;
+            text-align: center;
+            border-radius: 8px;
+        }
+        .success-message a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success-message a:hover {
+            background-color: #1565c0;
+        }
+    </style>
+
+    <div class="success-message">
+        <h1>С возвращением, {{ login }}!</h1>
+        <p>Вы успешно вошли в систему.</p>
+        <p>Нажмите ниже, чтобы перейти к главной странице Базы знаний:</p>
+        <a href="{{ url_for('lab5.lab55') }}">Перейти в Базу знаний</a>
+    </div>
+
+{% endblock %}
