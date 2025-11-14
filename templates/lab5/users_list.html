@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <h2>Зарегистрированные пользователи</h2>
+    
+    {% if users %}
+        <table border="1" style="width: 50%; margin: 20px auto; text-align: left;">
+            <thead>
+                <tr>
+                    <th>Логин</th>
+                    <th>Реальное имя</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.login }}</td>
+                    <td>{{ user.real_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>На данный момент нет зарегистрированных пользователей.</p>
+    {% endif %}
+    
+    <a href="{{ url_for('lab5.lab55') }}">На главную страницу</a>
+{% endblock %}

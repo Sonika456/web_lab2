@@ -4,9 +4,11 @@
 
 {% block main %}
     <h1>Создание статьи</h1>
+    
     {% if error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}
+
     <form method="post">
         <div>
             <label>
@@ -15,7 +17,20 @@
             </label>
         </div>
         <div>
-            <textarea name="article_text" rows="10" required></textarea>
+            <label>
+                Текст статьи:
+                <textarea name="article_text" rows="10" required></textarea>
+            </label>
+        </div>
+        <div style="margin: 15px 0;">
+            <label>
+                <input type="checkbox" name="is_favorite">
+                Добавить в "Любимые"
+            </label>
+            <label style="margin-left: 20px;">
+                <input type="checkbox" name="is_public">
+                Сделать публичной (доступна всем)
+            </label>
         </div>
         <div>
             <button type="submit">Готово</button> 

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <h2>Профиль пользователя: {{ login }}</h2>
+    {% if success %}
+        <p style="color: green;">{{ success }}</p>
+    {% endif %}
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="post">
+        <h3>Обновить имя</h3>
+        <div>
+            <label>
+                Текущее имя:
+                <input type="text" name="current_real_name" value="{{ current_name }}" disabled>
+            </label>
+        </div>
+        <div>
+            <label>
+                Новое реальное имя:
+                <input type="text" name="real_name" value="{{ current_name }}" required>
+            </label>
+        </div>
+        <button type="submit">Обновить имя</button>
+    </form>
+    <hr style="margin: 30px 0;">
+    <form method="post">
+        <h3>Сменить пароль</h3>
+        <p>Оставьте поля пустыми, если не хотите менять пароль.</p>
+        <div>
+            <label>
+                Новый пароль:
+                <input type="password" name="new_password">
+            </label>
+        </div>
+        <div>
+            <label>
+                Подтверждение пароля:
+                <input type="password" name="confirm_password">
+            </label>
+        </div>
+        <button type="submit">Сменить пароль</button>
+    </form>
+{% endblock %}

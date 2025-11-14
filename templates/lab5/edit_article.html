@@ -17,8 +17,23 @@
             </label>
         </div>
         <div>
-            <textarea name="article_text" rows="10" required>{{ article.article_text }}</textarea>
+            <label>
+                Текст статьи:
+                <textarea name="article_text" rows="10" required>{{ article.article_text }}</textarea>
+            </label>
         </div>
+        
+        <div style="margin: 15px 0;">
+            <label>
+                <input type="checkbox" name="is_favorite" {% if article.is_favorite %}checked{% endif %}>
+                Добавить в "Любимые"
+            </label>
+            <label style="margin-left: 20px;">
+                <input type="checkbox" name="is_public" {% if article.is_public %}checked{% endif %}>
+                Сделать публичной (доступна всем)
+            </label>
+        </div>
+        
         <div>
             <button type="submit">Сохранить изменения</button> 
             <a href="{{ url_for('lab5.list') }}">Отмена</a>

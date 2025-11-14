@@ -5,18 +5,25 @@
 {% block main %}
     <a href="{{index_url}}">На главную страницу</a>
     <h1>База знаний</h1>
-    
     <div class="bar">
         <ul class="links">
             <div class="button">
+                
                 <li><a href="/lab5/list">Список статей</a></li>
-                <li><a href="/lab5/create">Создать статью</a></li>
-                <li><a href="/lab5/login">Войти</a></li>
-                <li><a href="/lab5/register">Регистрация</a></li>
+                
+                {% if login %}
+                    <li><a href="/lab5/create">Создать статью</a></li>
+                    <li><a href="/lab5/profile">Профиль</a></li>
+                    <li><a href="/lab5/logout">Выйти</a></li>
+                {% else %}
+                    <li><a href="/lab5/login">Войти</a></li>
+                    <li><a href="/lab5/register">Регистрация</a></li>
+                {% endif %}
+                <li><a href="/lab5/users">Все пользователи</a></li>
             </div>
             <li class="user-name">
                 {% if login %}
-                    {{ login }} 
+                    {{ login }}
                 {% else %}
                     Anonymous
                 {% endif %}

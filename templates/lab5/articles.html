@@ -1,32 +1,47 @@
 {% extends "base.html" %}
 
-{% block lab %} {% endblock %}
+{% block lab %}Лабораторная работа 5{% endblock %}
 
 {% block main %}
-    <h2>Мои статьи</h2>
-    <p><a href="{{ url_for('lab5.create') }}">Создать новую статью</a></p>
-
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
+    <h2>Статьи</h2>
+    
+    {% if login %}
+        <p><a href="{{ url_for('lab5.create') }}">Создать новую статью</a></p>
     {% endif %}
 
-    {% if articles %}
+    {% if not articles %}
+        <p>На данный момент статей нет.</p>
+    {% else %}
         <ul>
         {% for article in articles %}
-            <li style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
-                <h3>{{ article.title }}</h3>
-                <p>{{ article.article_text }}</p>
-                <p><a href="{{ url_for('lab5.edit', article_id=article.id) }}">Редактировать</a>
-                    <form method="POST" action="{{ url_for('lab5.delete', article_id=article.id) }}" style="display: inline;">
-                        <button type="submit" style="color: red; border: none; background: none; cursor: pointer;">Удалить</button>
-                    </form>
+            <li style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; border-radius: 5px; background-color: {% if article.is_favorite %}#fff3cd{% else %}#f9f9f9{% endif %};">
+                <h3>
+                    {{ article.title }} 
+                    {% if article.is_favorite %}⭐{% endif %}
+                    {% if article.is_public %}🌎{% endif %}
+                </h3>
+                
+                <p>
+                    Автор: {{ article.author_login }}
+                    {% if article.is_public %} (Публичная){% endif %}
                 </p>
+                <div style="white-space: pre-wrap; margin-top: 10px; border-left: 3px solid #007bff; padding-left: 10px;">
+                    {{ article.article_text }}
+                </div>
+                
+                {% if article.author_login == login %}
+                    <p style="margin-top: 10px;">
+                        <a href="{{ url_for('lab5.edit', article_id=article.id) }}">Редактировать</a>
+                        
+                        <form method="POST" action="{{ url_for('lab5.delete', article_id=article.id) }}" style="display: inline; margin-left: 10px;">
+                            <button type="submit" style="color: red; border: none; background: none; cursor: pointer;">Удалить</button>
+                        </form>
+                    </p>
+                {% endif %}
             </li>
         {% endfor %}
         </ul>
-    {% else %}
-        <p>У вас пока нет ни одной статьи. Создайте первую!</p>
     {% endif %}
-
+    
     <a href="{{ url_for('lab5.lab55') }}">На главную страницу</a>
 {% endblock %}
