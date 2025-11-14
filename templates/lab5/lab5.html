@@ -1,17 +1,20 @@
 {% extends "base.html" %}
 
-{# Номер лабораторной работы #}
 {% block lab %}Лабораторная работа 5{% endblock %}
 
-{# Основной контент: #}
 {% block main %}
     <a href="{{index_url}}">На главную страницу</a>
     <h1>База знаний</h1>
-    <div>
-
+    
+    <div class="bar">
+        <ul class="links">
+            <div class="button">
+                <li><a href="/lab5/list.html">Список статей</a></li>
+                <li><a href="/lab5/create.html">Создать статью</a></li>
+                <li><a href="/lab5/login.html">Войти</a></li>
+                <li><a href="/lab5/register.html">Регистрация</a></li>
+            </div>
+            <li class="user-name">Anonymous</li>
+        </ul>
     </div>
-    <ol>
-        <li><a href="/lab5/">Д</a></li>
-
-    </ol>
 {% endblock %}
