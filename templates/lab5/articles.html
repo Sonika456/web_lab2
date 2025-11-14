@@ -3,9 +3,30 @@
 {% block lab %} {% endblock %}
 
 {% block main %}
-    <h1>Статьи</h1>
-    {% for article in articles %} 
-        <h2>{{ article['title'] }}</h2> 
-        <blockquote>{{ article['article_text'] }}</blockquote>
-    {% endfor %}
+    <h2>Мои статьи</h2>
+    <p><a href="{{ url_for('lab5.create') }}">Создать новую статью</a></p>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if articles %}
+        <ul>
+        {% for article in articles %}
+            <li style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.article_text }}</p>
+                <p><a href="{{ url_for('lab5.edit', article_id=article.id) }}">Редактировать</a>
+                    <form method="POST" action="{{ url_for('lab5.delete', article_id=article.id) }}" style="display: inline;">
+                        <button type="submit" style="color: red; border: none; background: none; cursor: pointer;">Удалить</button>
+                    </form>
+                </p>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас пока нет ни одной статьи. Создайте первую!</p>
+    {% endif %}
+
+    <a href="{{ url_for('lab5.lab55') }}">На главную страницу</a>
 {% endblock %}
