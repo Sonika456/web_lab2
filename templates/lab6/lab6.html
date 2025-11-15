@@ -2,13 +2,53 @@
 
 {% block lab %}Лабораторная работа 6{% endblock %}
 
-{% block main %}
-    <h1></h1>
-    <div>Тема</div>
-    <a href="{{index_url}}">На главную страницу</a>
-    <div>
+{% block script %}
+<script>
+function getOfficeList () {
+    const url = '/lab6/json-rpc-api/';
+    const json = {
+        'jsonrpc': '2.0',
+        'method': 'info',
+        'id': Math.round(Math.random()*1000)
+    };
+    fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(json)
+    })
+    .then(function(response) {
+        return response.json()
+    })
+    .then(function(data) {
+        const office_list = data.result;
+        const ul = document.getElementById('office-list');
+        for(let i= 0; i < office_list.length; i++) {
+            const office = office_list[i];
+            const li= document.createElement('li');
+            li.innerText=`${office.number}: ${office.tenant || 'Свободен'}`;
 
-    </div>
+            const bookingButton = document.createElement('button');
+            bookingButton.innerText = 'Зарезервировать';
+            bookingButton.onclick = function() {booking(office.number)};
+            li.appendChild (bookingButton);
+
+            ul.appendChild(li);
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', function() {
+    getOfficeList();
+});
+</script>
+{% endblock %}
+
+{% block main %}
+    <h1>Список кабинетов</h1>
+    <a href="{{index_url}}">На главную страницу</a>
+    <ul id="office-list"></ul>
+
+
+
     <div>Список сделанных страниц:</div>
     <ol>
         <li><a href="/lab6/">ghjf</a></li>
