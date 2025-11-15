@@ -6,6 +6,7 @@ from lab2 import lab2
 from lab3 import lab3
 from lab4 import lab4
 from lab5 import lab5
+from lab6 import lab6
 
 app = Flask(__name__)
 
@@ -17,6 +18,7 @@ app.register_blueprint(lab2)
 app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 app.register_blueprint(lab5)
+app.register_blueprint(lab6)
 
 log_entries = []
 @app.errorhandler(404)
@@ -159,6 +161,7 @@ def index():
     lab3_url = url_for('lab3.lab33')
     lab4_url = url_for('lab4.lab44')
     lab5_url = url_for('lab5.lab55')
+    lab6_url = url_for('lab6.lab66')
     css_path = url_for("static", filename="/lab1/lab1.css")
     sakyra = url_for('static', filename="favicon2.ico")
     return '''
@@ -179,6 +182,7 @@ def index():
                 <li><a href="''' + lab3_url + '''">Третья лабораторная</a></li>
                 <li><a href="''' + lab4_url + '''">Четвертая лабораторная</a></li>
                 <li><a href="''' + lab5_url + '''">Пятая лабораторная</a></li>
+                <li><a href="''' + lab6_url + '''">Шестая лабораторная</a></li>
 
             </ul>
             <footer>
