@@ -1,6 +1,4 @@
 from flask import Blueprint, url_for, render_template, request, session
-
-
 lab6 = Blueprint('lab6', __name__)
 
 offices = []
@@ -38,6 +36,15 @@ def api():
         office_number = data ['params']
         for office in offices:
             if office['number'] == office_number:
+                if office ['tenant'] != '':
+                    return {
+                        'jsonrpc': '2.0',
+                        'error': {
+                            'code': 2,
+                            'message': 'Already booked'
+                        },
+                        'id': id
+                    }
                 office['tenant'] = login
                 return {
                     'jsonrpc': '2.0',
