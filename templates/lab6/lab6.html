@@ -4,6 +4,8 @@
 
 {% block script %}
 <script>
+const CURRENT_LOGIN = '{{ current_login }}'; 
+
 function getOfficeList () {
     const url = '/lab6/json-rpc-api/';
     const json = {
@@ -22,26 +24,45 @@ function getOfficeList () {
     .then(function(data) {
         const office_list = data.result;
         const ul = document.getElementById('office-list');
+        ul.innerHTML = '';
         for(let i= 0; i < office_list.length; i++) {
             const office = office_list[i];
             const li= document.createElement('li');
             li.innerText=`${office.number}: ${office.tenant || 'Свободен'}`;
 
-            const bookingButton = document.createElement('button');
-            bookingButton.innerText = 'Зарезервировать';
-            bookingButton.onclick = function() {booking(office.number)};
-            li.appendChild(bookingButton);
+            const isBooked = office.tenant !== '';
+            const isMyBooking = office.tenant === CURRENT_LOGIN;
+
+            if (isMyBooking) {
+                const cancelButton = document.createElement('button');
+                cancelButton.innerText = 'Освободить 🔓';
+                cancelButton.onclick = function() {cancellation(office.number)};
+                li.appendChild(cancelButton);
+            } else if (!isBooked && CURRENT_LOGIN) {
+                const bookingButton = document.createElement('button');
+                bookingButton.innerText = 'Зарезервировать 📝';
+                bookingButton.onclick = function() {booking(office.number)};
+                li.appendChild(bookingButton);
+            }
 
             ul.appendChild(li);
         }
     });
 }
 
+function cancellation(officeNumber) {
+    callApi('cancellation', officeNumber);
+}
+
 function booking(officeNumber) {
+    callApi('booking', officeNumber);
+}
+
+function callApi(methodName, officeNumber) {
     const url = '/lab6/json-rpc-api/';
-    const json= {
+    const json = {
         'jsonrpc':'2.0',
-        'method': 'booking',
+        'method': methodName,
         'params': officeNumber,
         'id': Math.round(Math.random()*1000)
     };
@@ -55,17 +76,7 @@ function booking(officeNumber) {
     })
     .then(function(data) {
         if(data.error) {
-            switch(data.error.code) {
-                case 1:
-                    alert('Вы не авторизованы, пожалуйста, авторизуйтесь');
-                    break;
-                case 2:
-                    alert('Офис уже арендуется');
-                    break;
-                case -32601:
-                    alert('Странная ошибка');
-                    break;                
-            }
+            handleError(data.error);
         }
         else {
             document.getElementById('office-list').innerHTML =''; 
@@ -73,6 +84,35 @@ function booking(officeNumber) {
         }
     });
 }
+
+function handleError(error) {
+    let message = '';
+    switch(error.code) {
+        case 1:
+            message = 'Вы не авторизованы, пожалуйста, авторизуйтесь (Unauthorized).';
+            break;
+        case 2:
+            message = 'Офис уже арендуется (Already booked).';
+            break;
+        case 3:
+            message = 'Офис не арендован, его нельзя освободить (Not booked).';
+            break;
+        case 4:
+            message = 'Этот офис арендован другим пользователем, вы не можете его освободить (Not your booking).';
+            break;
+        case -32601:
+            message = 'Странная ошибка: Метод не найден.';
+            break;
+        case -32602:
+            message = 'Ошибка в параметрах: Офис не найден.';
+            break;
+        default:
+            message = 'Произошла неизвестная ошибка: ' + error.message;
+            break;
+    }
+    alert(message);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     getOfficeList();
 });
@@ -80,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 {% endblock %}
 
 {% block main %}
-    <h1>Список кабинетов</h1>
+    <h1>Список кабинетов (Ваш логин: {{ current_login or 'Не авторизован' }})</h1>
     <a href="{{index_url}}">На главную страницу</a>
     <ul id="office-list"></ul>
 {% endblock %}
