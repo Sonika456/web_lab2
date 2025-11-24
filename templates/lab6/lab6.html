@@ -25,15 +25,17 @@ function getOfficeList () {
         const office_list = data.result;
         const ul = document.getElementById('office-list');
         ul.innerHTML = '';
+        let totalRentCost = 0;
         for(let i= 0; i < office_list.length; i++) {
             const office = office_list[i];
             const li= document.createElement('li');
-            li.innerText=`${office.number}: ${office.tenant || 'Свободен'}`;
+            li.innerText = `${office.number}: ${office.tenant || 'Свободен'} (Цена: ${office.price} ₽)`;
 
             const isBooked = office.tenant !== '';
             const isMyBooking = office.tenant === CURRENT_LOGIN;
 
             if (isMyBooking) {
+                totalRentCost += office.price;
                 const cancelButton = document.createElement('button');
                 cancelButton.innerText = 'Освободить 🔓';
                 cancelButton.onclick = function() {cancellation(office.number)};
@@ -47,6 +49,15 @@ function getOfficeList () {
 
             ul.appendChild(li);
         }
+
+        const totalCostDiv = document.getElementById('total-rent-cost');
+        if (!totalCostDiv) {
+            const newDiv = document.createElement('div');
+            newDiv.id = 'total-rent-cost';
+            ul.after(newDiv);
+        }
+        document.getElementById('total-rent-cost').innerHTML = 
+            `<h3>Общая стоимость вашей аренды: ${totalRentCost} ₽</h3>`;
     });
 }
 
