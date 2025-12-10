@@ -5,7 +5,7 @@ lab7 = Blueprint('lab7', __name__)
 @lab7.route('/lab7/')
 def lab77():
     index_url = url_for('index')
-    return render_template('/lab5/lab5.html', index_url=index_url)
+    return render_template('/lab7/lab7.html', index_url=index_url)
 
 films = [
     {
@@ -66,3 +66,14 @@ def get_film(id):
         return films[id]
     else:
         abort(404)
+
+
+@lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE']) 
+def del_film(id): 
+    films_count = len(films)
+    if id >= 0 and id < films_count:
+        del films[id]
+        return '', 204
+    else:
+        abort(404)
+
