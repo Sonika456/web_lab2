@@ -1,4 +1,5 @@
 from flask import Blueprint, url_for, render_template, abort, request
+from datetime import datetime
 
 lab7 = Blueprint('lab7', __name__)
 
@@ -77,15 +78,50 @@ def del_film(id):
         abort(404)
 
 
+def validate_film(film_data):
+    errors = {}
+    title_ru = film_data.get('title_ru', '').strip()
+    title = film_data.get('title', '').strip()
+    year_str = film_data.get('year')
+    description = film_data.get('description', '').strip()
+
+    if not title_ru:
+        errors['title_ru'] = 'Русское название должно быть заполнено.'
+    if not title_ru and not title:
+        errors['title'] = 'Должно быть заполнено либо русское, либо оригинальное название.'
+    
+    MAX_YEAR = datetime.now().year
+    MIN_YEAR = 1895
+    
+    if year_str is not None:
+        year_str = str(year_str).strip()
+    
+    if not year_str:
+        errors['year'] = 'Год должен быть указан.'
+    elif not year_str.isdigit():
+        errors['year'] = 'Год должен быть целым числом.'
+    else:
+        year = int(year_str)
+        if year < MIN_YEAR or year > MAX_YEAR:
+            errors['year'] = f'Год должен быть в диапазоне от {MIN_YEAR} до {MAX_YEAR}.'
+
+    if not description:
+        errors['description'] = 'Описание не может быть пустым.'
+    elif len(description) > 2000:
+        errors['description'] = f'Описание не может превышать 2000 символов (сейчас: {len(description)}).'
+    return errors if errors else None
+
+
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT']) 
 def put_film(id):
     films_count = len(films)
     if id >= 0 and id < films_count:
         film = request.get_json()
+        validation_errors = validate_film(film)
+        if validation_errors:
+            return validation_errors, 400
         if not film.get('title') and film.get('title_ru'):
             film['title'] = film['title_ru']
-        if film.get('description', '') == '':
-            return {'description': 'Заполните описание фильма'}, 400
         films[id] = film
         return films[id]
     else:
@@ -97,10 +133,11 @@ def add_films():
     new_film_data = request.get_json()
     if not new_film_data:
         abort(400) 
+    validation_errors = validate_film(new_film_data)
+    if validation_errors:
+        return validation_errors, 400
     if not new_film_data.get('title') and new_film_data.get('title_ru'):
         new_film_data['title'] = new_film_data['title_ru']
-    if new_film_data.get('description', '') == '':
-        return {'description': 'Заполните описание фильма'}, 400
     films.append(new_film_data)
     new_film_id = len(films) - 1
     return {'id': new_film_id}
