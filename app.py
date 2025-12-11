@@ -8,6 +8,8 @@ from lab4 import lab4
 from lab5 import lab5
 from lab6 import lab6
 from lab7 import lab7
+from lab8 import lab8
+from lab9 import lab9
 
 app = Flask(__name__)
 
@@ -21,6 +23,8 @@ app.register_blueprint(lab4)
 app.register_blueprint(lab5)
 app.register_blueprint(lab6)
 app.register_blueprint(lab7)
+app.register_blueprint(lab8)
+app.register_blueprint(lab9)
 
 log_entries = []
 @app.errorhandler(404)
@@ -165,6 +169,8 @@ def index():
     lab5_url = url_for('lab5.lab55')
     lab6_url = url_for('lab6.lab66')
     lab7_url = url_for('lab7.lab77')
+    lab8_url = url_for('lab8.lab88')
+    lab9_url = url_for('lab9.lab99')
     css_path = url_for("static", filename="/lab1/lab1.css")
     sakyra = url_for('static', filename="favicon2.ico")
     return '''
@@ -187,6 +193,8 @@ def index():
                 <li><a href="''' + lab5_url + '''">Пятая лабораторная</a></li>
                 <li><a href="''' + lab6_url + '''">Шестая лабораторная</a></li>
                 <li><a href="''' + lab7_url + '''">Седьмая лабораторная</a></li>
+                <li><a href="''' + lab8_url + '''">Восьмая лабораторная</a></li>
+                <li><a href="''' + lab9_url + '''">Девятая лабораторная</a></li>
             </ul>
             <footer>
                 <p>Черевцова Софья, ФБИ-34, 3 курс, 2025</p>
