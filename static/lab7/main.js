@@ -51,6 +51,10 @@ function deleteFilm(id, title) {
         });
 }
 function showModal() {
+    const errorElement = document.getElementById('description-error');
+    if (errorElement) {
+        errorElement.innerText = '';
+    }
     document.querySelector('div.modal').style.display = 'block';
 }
 function hideModal() {
@@ -76,18 +80,36 @@ function sendFilm() {
         description: document.getElementById('description').value
     }
 
-    const url=`/lab7/rest-api/films/${id}`; 
-    const method = 'POST';
+    document.getElementById('description-error').innerText = '';
+
+    let url;
+    let method;
+
+    if (id === '') {
+        url = `/lab7/rest-api/films/`; 
+        method = 'POST';
+    } else {
+        url = `/lab7/rest-api/films/${id}`;
+        method = 'PUT';
+    }
 
     fetch(url, {
         method: method,
         headers: {"Content-Type": "application/json"}, 
         body: JSON.stringify(film)
     })
-    .then(function() { 
-        fillFilmList(); 
-        hideModal();
-    });
+    .then(function(resp) { 
+        if (resp.ok) {
+            fillFilmList(); 
+            hideModal();
+            return{};
+        }
+        return resp.json();
+    })
+    .then(function(errors) {
+        if (errors.description)
+            document.getElementById('description-error').innerText = errors.description;
+    })
 }
 function editFilm(id) {
     fetch(`/lab7/rest-api/films/${id}`)
