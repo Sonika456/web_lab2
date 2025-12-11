@@ -53,7 +53,6 @@ films = [
     },
 ]
 
-headers = {"Content-Type": "application/json"}
 @lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
     return films
@@ -83,7 +82,9 @@ def put_film(id):
     films_count = len(films)
     if id >= 0 and id < films_count:
         film = request.get_json()
-        if film['description'] == '':
+        if not film.get('title') and film.get('title_ru'):
+            film['title'] = film['title_ru']
+        if film.get('description', '') == '':
             return {'description': 'Заполните описание фильма'}, 400
         films[id] = film
         return films[id]
@@ -96,6 +97,8 @@ def add_films():
     new_film_data = request.get_json()
     if not new_film_data:
         abort(400) 
+    if not new_film_data.get('title') and new_film_data.get('title_ru'):
+        new_film_data['title'] = new_film_data['title_ru']
     if new_film_data.get('description', '') == '':
         return {'description': 'Заполните описание фильма'}, 400
     films.append(new_film_data)

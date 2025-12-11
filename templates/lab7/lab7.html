@@ -5,20 +5,69 @@
 {% block script %}
 <script src="{{ url_for('static', filename='lab7/main.js') }}"></script>
 <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        background-color: #fff;
+        border-radius: 8px; 
+        overflow: hidden; 
+    }
+    th, td {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid #EAEAEA; 
+    }
+    thead th {
+        background-color: #B58E6A;
+        color: white;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 0.9em;
+    }
+    tbody tr:nth-child(even) {
+        background-color: #F8F4EF;
+    }
+    tbody tr:hover {
+        background-color: #EFE7DB;
+    }
+    td button {
+        padding: 5px 10px;
+        font-size: 0.85em;
+        margin-right: 5px;
+    }
     .modal {
-        display: none;
-        z-index: 100;
-        box-shadow: 3px 3px 5px #B58E6A;
-        background: #D9C6B0;
-        width: 400px;
+        z-index: 101;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        background: #FFFDF9;
+        border: 1px solid #B58E6A;
+        border-radius: 8px;
+        width: 450px;
         left: 50%;
-        top: 220px;
-        margin-left: -200px;
-        position: absolute;
-        padding: 20px;
+        top: 100px;
+        margin-left: -225px;
+        position: fixed;
+        padding: 25px;
+        display: none;
+    }
+    .modal button {
+        margin-top: 15px;
+        margin-right: 10px;
+    }
+    .modal button:last-child {
+        background-color: #D9C6B0; 
+        color: #6B4F3F;
+    }
+    .modal button:last-child:hover {
+        background-color: #CBB9A0;
     }
     .error-message { 
-        color: red;
+        color: #D9534F;
+        font-size: 0.9em;
+        margin-top: -10px;
+        margin-bottom: 15px;
+        font-weight: normal;
     }
 </style>
 {% endblock %}
