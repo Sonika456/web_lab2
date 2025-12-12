@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
 from db.models import users, articles
 from flask_login import login_user, login_required, logout_user, current_user
+from sqlalchemy import or_, func
 
 lab8 = Blueprint('lab8', __name__)
 
@@ -59,12 +60,21 @@ def login():
 
 
 @lab8.route('/lab8/articles/') 
-@login_required 
 def article_list(): 
-    all_articles = articles.query.all()
+    search_query = request.args.get('q', '').strip()
     author_logins = {u.id: u.login for u in users.query.all()}
-    return render_template('lab8/articles.html', articles=all_articles, current_user=current_user, author_logins=author_logins)
+    visibility_condition = (articles.is_public == True)
+    if current_user.is_authenticated:
+        visibility_condition = or_(articles.is_public == True, articles.login_id == current_user.id)
 
+    all_visible_articles = articles.query.filter(visibility_condition).all()
+
+    search_results = None
+    if search_query:
+        search_pattern = f'%{search_query.lower()}%'
+        search_condition = (func.lower(articles.title).like(search_pattern))  
+        search_results = articles.query.filter(visibility_condition, search_condition).all()
+    return render_template('lab8/articles.html', articles=all_visible_articles, search_results=search_results, search_query=search_query, current_user=current_user, author_logins=author_logins)
 
 @lab8.route('/lab8/create', methods=['GET', 'POST'])
 @login_required 
