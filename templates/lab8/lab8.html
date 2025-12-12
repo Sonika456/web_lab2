@@ -10,11 +10,23 @@
         <ul class="links">
             <div class="button">
                 <li><a href="/lab8/articles">Список статей</a></li>
-                <li><a href="/lab8/create">Создать статью</a></li>
-                <li><a href="/lab8/login">Войти</a></li>
-                <li><a href="/lab8/register">Регистрация</a></li>
+                
+                {% if current_user.is_authenticated %}
+                    <li><a href="/lab8/create">Создать статью</a></li>
+                    <li><a href="/lab8/logout/">Выход</a></li>
+                {% else %}
+                    <li><a href="/lab8/login">Войти</a></li>
+                    <li><a href="/lab8/register">Регистрация</a></li>
+                {% endif %}
             </div>
-            <li class="user-name">Anonymous</li>
+
+            <li class="user-name">
+                {% if current_user.is_authenticated %}
+                    Привет, {{ current_user.login }}
+                {% else %}
+                    Anonymous
+                {% endif %}
+            </li>
         </ul>
     </div>
 {% endblock %}

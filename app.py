@@ -188,6 +188,21 @@ def bad_request(error):
     </html>
     ''', 400
 
+@app.errorhandler(403)
+def status_403(error):
+    return '''
+    <!doctype html>
+    <html>
+        <head>
+            <title>Ошибка 403</title>
+            <style>body { font-family: sans-serif; text-align: center; padding-top: 50px; }</style>
+        </head>
+        <body>
+            <h1>Ошибка 403: Доступ запрещен</h1>
+            <p>У вас нет прав для просмотра этой страницы.</p>
+        </body>
+    </html>
+    ''', 403
 
 @app.route("/")
 @app.route("/index")

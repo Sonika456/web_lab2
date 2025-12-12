@@ -3,5 +3,35 @@
 {% block lab %}Лабораторная 8{% endblock %}
 
 {% block main %}
+    <h1>Создание новой статьи</h1>
 
+    {% if error %}
+        <p style="color: red; font-weight: bold;">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" action="/lab8/create">
+        <div>
+            <label>Заголовок статьи (обязательно):</label><br>
+            <input type="text" name="title" required size="50">
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label>Текст статьи (обязательно):</label><br>
+            <textarea name="article_text" rows="10" cols="50" required></textarea>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label>
+                <input type="checkbox" name="is_favorite"> Добавить в Избранное
+            </label>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label>
+                <input type="checkbox" name="is_public" checked> Сделать публичной
+            </label>
+        </div>
+
+        <button type="submit">Сохранить статью</button>
+    </form>
 {% endblock %}

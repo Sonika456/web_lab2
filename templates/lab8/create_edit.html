@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная 8{% endblock %}
+
+{% block main %}
+    <h1>{% if article %}Редактирование статьи: {{ article.title }}{% else %}Создание новой статьи{% endif %}</h1>
+
+    {% if error %}
+        <p style="color: red; font-weight: bold;">{{ error }}</p>
+    {% endif %}
+
+    <form method="post" action="{% if article %}/lab8/edit/{{ article.id }}{% else %}/lab8/create{% endif %}">
+        <div>
+            <label>Заголовок статьи (обязательно):</label><br>
+            <input type="text" name="title" required size="50" value="{{ article.title if article else '' }}">
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label>Текст статьи (обязательно):</label><br>
+            <textarea name="article_text" rows="10" cols="50" required>{{ article.article_text if article else '' }}</textarea>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label>
+                <input type="checkbox" name="is_favorite" {% if article and article.is_favorite %}checked{% endif %}> Добавить в Избранное
+            </label>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <label>
+                <input type="checkbox" name="is_public" {% if not article or article.is_public %}checked{% endif %}> Сделать публичной
+            </label>
+        </div>
+        <button type="submit">{% if article %}Сохранить изменения{% else %}Сохранить статью{% endif %}</button>
+    </form>
+{% endblock %}
