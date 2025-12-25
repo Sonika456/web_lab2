@@ -1,17 +1,17 @@
 body {
-    background-color: rgb(255, 247, 230); 
+    background-color: rgb(22, 107, 14); 
     font-family: 'Georgia', serif; 
     margin: 0;
     padding: 0;
     line-height: 1.7; 
-    color: rgb(107, 79, 63);
+    color: #af0808;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 header {
-    background-color: #B58E6A; 
-    color: #FFFDF9;
+    background-color: #af0808; 
+    color: #ffffff;
     padding: 20px 30px;
     height: 40px;
     display: flex;
@@ -42,8 +42,8 @@ main sup {
     font-weight: bold;
 }
 footer {
-    background-color: #D9C6B0; 
-    color: #6B4F3F;
+    background-color: #af0808; 
+    color: #ffffff;
     padding: 20px;
     text-align: center;
     font-size: 0.9em;
