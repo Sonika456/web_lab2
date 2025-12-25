@@ -4,11 +4,25 @@
 
 {% block main %}
 <div class="ny-container">
-    <h1 style="color: #2e7d32;">🎄 С Новым Годом! 🎁</h1>
-    <p>Вы можете открыть не более 3 коробок с подарками.</p>
+    <h1 style="color: #c41e3a;">🎄 Новогодние подарки 🎁</h1>
+    
+    {% if current_user.is_authenticated %}
+        <div style="margin-bottom: 20px;">
+            <p>Добро пожаловать, <b>{{ current_user.login }}</b>!</p>
+            <button class="santa-btn" onclick="resetAllBoxes()">🎅 Позвать Деда Мороза (Сброс)</button>
+            <a href="/lab8/logout" style="margin-left: 10px; color: #c41e3a;">Выйти</a>
+        </div>
+    {% else %}
+        <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ffd700; border-radius: 10px; background: #fffde7;">
+            <p>Хотите VIP-подарки? 🎁</p>
+            <a href="/lab8/login" class="ny-btn" style="text-decoration: none; display: inline-block;">Войти в аккаунт</a>
+        </div>
+    {% endif %}
+
     <div id="remaining-info">
-        Осталось подарков под елкой: <strong id="unopened-count">{{ remaining }}</strong>
+        Осталось подарков: <strong id="unopened-count">{{ remaining }}</strong>
     </div>
+
     <div class="gift-grid">
         {% for opened in opened_boxes %}
         <div class="gift-box" id="box-{{ loop.index0 }}" onclick="tryOpenBox({{ loop.index0 }})">
@@ -16,21 +30,20 @@
                 <div class="empty-box">Пусто ❄️</div>
             {% else %}
                 {% if loop.index in [6, 7, 10] %}
-                    <img src="{{ url_for('static', filename='lab9/box_closed_' ~ loop.index ~ '.webp') }}" alt="Подарок">
+                    <img src="{{ url_for('static', filename='lab9/box_closed_' ~ loop.index ~ '.webp') }}" alt="Box">
                 {% else %}
-                    <img src="{{ url_for('static', filename='lab9/box_closed_' ~ loop.index ~ '.jpg') }}" alt="Подарок">
+                    <img src="{{ url_for('static', filename='lab9/box_closed_' ~ loop.index ~ '.jpg') }}" alt="Box">
                 {% endif %}
             {% endif %}
         </div>
         {% endfor %}
     </div>
+
     <div id="present-modal" class="modal" style="display:none;">
         <div class="modal-content">
             <h2 id="congrats-text"></h2>
-            <div class="img-wrapper">
-                <img id="present-img" src="" alt="Ваш подарок">
-            </div>
-            <button class="ny-btn" onclick="closeModal()">Ура!</button>
+            <div class="img-wrapper"><img id="present-img" src=""></div>
+            <button class="ny-btn" onclick="closeModal()">Закрыть</button>
         </div>
     </div>
 </div>
@@ -42,34 +55,56 @@
         border-radius: 20px; 
         border: 5px dashed #c41e3a; 
     }
-    #remaining-info { margin-bottom: 20px; font-size: 1.5em; color: #2e7d32; }
+    #remaining-info { 
+        margin-bottom: 20px; 
+        font-size: 1.5em; 
+        color: #2e7d32; 
+    }
     .gift-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 15px;
         max-width: 900px;
         margin: 20px auto;
-    }
-    .gift-box {
-        border: 2px solid #ffd700;
-        border-radius: 10px;
+        }  
+    .santa-btn {
+        background: #2e7d32;
+        color: white;
+        border: 3px solid #ffd700;
+        padding: 10px 20px;
+        border-radius: 50px;
         cursor: pointer;
-        transition: transform 0.2s;
-        background: white;
-        height: 126px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
+        font-weight: bold;
+        font-size: 1.1em;
+        transition: 0.3s;
+    }
+    .santa-btn:hover { 
+        background: #1b5e20; 
+        transform: translateY(-3px); 
+    }
+    .gift-box { 
+        border: 2px solid #ffd700; 
+        background: white; 
+        height: 126px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
         overflow: hidden;
     }
-    .gift-box:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(196, 30, 58, 0.3); }
+    .gift-box:hover { 
+        transform: scale(1.05); 
+        box-shadow: 0 0 15px rgba(196, 30, 58, 0.3); 
+    }
     .gift-box img { 
         max-width: 100%; 
         max-height: 100%; 
         object-fit: contain;
     }
-    .empty-box { color: #ccc; font-style: italic; font-size: 1.1em; }
+    .empty-box { 
+        color: #ccc; 
+        font-style: italic; 
+        font-size: 1.1em; 
+    }
     .img-wrapper {
         height: 250px;
         display: flex;
@@ -82,8 +117,27 @@
         max-height: 100%;
         object-fit: contain;
     }
-    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-    .modal-content { background: white; padding: 25px; border-radius: 15px; border: 4px solid #c41e3a; width: 90%; max-width: 450px; text-align: center; }
+    .modal { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        background: rgba(0,0,0,0.8); 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        z-index: 1000; 
+    }
+    .modal-content { 
+        background: white; 
+        padding: 25px; 
+        border-radius: 15px; 
+        border: 4px solid #c41e3a; 
+        width: 90%; 
+        max-width: 450px; 
+        text-align: center; 
+    }
     .img-wrapper {
         height: 250px;
         display: flex;
@@ -121,17 +175,24 @@ function tryOpenBox(id) {
     .then(data => {
         boxElement.innerHTML = '<div class="empty-box">Пусто ❄️</div>';
         document.getElementById('unopened-count').innerText = data.remaining;
-        
         document.getElementById('congrats-text').innerText = data.present.text;
         document.getElementById('present-img').src = '/static/' + data.present.img;
         document.getElementById('present-modal').style.display = 'flex';
     })
-    .catch(error => {
-        alert(error.message);
+    .catch(error => alert(error.message));
+}
+function resetAllBoxes() {
+    if (!confirm("Вы уверены, что хотите снова наполнить все коробки?")) return;
+    fetch('/lab9/reset', { method: 'POST' })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
     });
 }
-function closeModal() {
-    document.getElementById('present-modal').style.display = 'none';
+function closeModal() { 
+    document.getElementById('present-modal').style.display = 'none'; 
 }
 </script>
 {% endblock %}
