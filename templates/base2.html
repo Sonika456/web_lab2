@@ -101,8 +101,8 @@
                 <a href="/RGZ/create" class="btn-create"><i class="fa-solid fa-plus"></i> Создать</a>
                 
                 <div class="user-menu-container">
-                    <img src="{% if session.user_avatar %}{{ session.user_avatar }}{% else %}https://api.dicebear.com/7.x/avataaars/svg?seed={{ session.user_login }}{% endif %}" 
-                        class="profile-pic"  id="avatar-trigger" alt="User Avatar" style="cursor: pointer; object-fit: cover; width: 40px; height: 40px; border-radius: 50%;">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ session.user_login }}" 
+                        class="profile-pic" id="avatar-trigger" alt="User Avatar" style="cursor: pointer;">
 
                     <div class="dropdown-menu" id="userDropdown">
                         <div class="dropdown-header">
@@ -143,7 +143,7 @@
     </main>
 
     <footer>
-        <div><i class="bi bi-clipboard"></i> Доска Объявлений © 2024</div>
+        <div><i class="bi bi-clipboard"></i> Доска Объявлений © 2025</div>
         <div style="text-align: right;">
             <strong>Студентка: Черевцова С. К.</strong><br>
             Группа: ФБИ-34. Курс 3

@@ -13,34 +13,42 @@
         </div>
 
         <div class="tabs">
-            <a href="#" class="tab active"><i class="fa-solid fa-users"></i> Пользователи (2)</a>
-            <a href="#" class="tab"><i class="fa-solid fa-file-lines"></i> Объявления (3)</a>
+            <button class="tab active" id="tab-users" onclick="switchTab('users')">
+                <i class="fa-solid fa-users"></i> Пользователи <span id="count-users"></span>
+            </button>
+            <button class="tab" id="tab-ads" onclick="switchTab('ads')">
+                <i class="fa-solid fa-file-lines"></i> Объявления <span id="count-ads"></span>
+            </button>
         </div>
 
-        <div class="admin-grid">
-            <div class="admin-card">
-                <div class="user-row">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ivan" class="user-avatar" alt="">
-                    <div class="user-details">
-                        <b>Иван Петров</b>
-                        <span>@ivan</span>
-                        <span><i class="fa-regular fa-envelope"></i> ivan@example.com</span>
-                    </div>
-                </div>
-                <p class="bio">Люблю программирование</p>
-                <button class="btn-delete-full"><i class="fa-solid fa-trash"></i> Удалить</button>
+        <div id="admin-grid" class="admin-grid">
+            </div>
+    </div>
+    <div id="editUserModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="font-family: 'Playfair Display', serif;">Редактировать профиль</h2>
+            <input type="hidden" id="edit-user-id">
+            
+            <div class="form-group">
+                <label>Имя пользователя</label>
+                <input type="text" id="edit-user-name" class="modal-input">
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="edit-user-email" class="modal-input">
+            </div>
+            
+            <div class="form-group">
+                <label>О себе</label>
+                <textarea id="edit-user-bio" class="modal-textarea"></textarea>
             </div>
 
-            <div class="admin-card">
-                <div class="user-row">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" class="user-avatar" alt="">
-                    <div class="user-details">
-                        <b>Мария Сидорова</b>
-                        <span>@maria</span>
-                        <span><i class="fa-regular fa-envelope"></i> maria@example.com</span>
-                    </div>
-                </div>
-                <div style="height: 38px;"></div> <button class="btn-delete-full"><i class="fa-solid fa-trash"></i> Удалить</button>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('editUserModal')">Отмена</button>
+                <button class="btn-confirm-save" onclick="saveUserEdit()">
+                    <i class="fa-solid fa-check"></i> Сохранить изменения
+                </button>
             </div>
         </div>
     </div>
@@ -197,5 +205,240 @@
         }
         
         .trash-abs:hover { color: var(--danger); }
+        button.tab { border: none; cursor: pointer; font-family: inherit; }
+        .tab.active { background: #fff; color: #2c2c2c; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        
+        /* Стиль для карточки объявления в админке */
+        .ad-admin-card { background: white; border-radius: 15px; padding: 20px; position: relative; border: 1px solid #f0f0f0; }
+        .ad-admin-card h3 { font-family: 'Playfair Display', serif; margin-top: 0; padding-right: 30px; }
+        .ad-admin-card .author { font-size: 12px; color: #aaa; margin-bottom: 10px; display: block; }
+        .btn-edit-user {
+            flex-grow: 1;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-delete-small {
+            padding: 10px 15px;
+            background: white;
+            border: 1px solid #f8d7da;
+            color: #dc3545;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .modal-overlay {
+            display: none; /* Скрыто по умолчанию */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
+            z-index: 1000; /* Поверх всего */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Контент модального окна */
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Стили для полей внутри модалки */
+        .modal-input, .modal-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin-top: 8px;
+            font-family: inherit;
+            box-sizing: border-box; /* Чтобы padding не раздувал ширину */
+        }
+
+        .modal-textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        /* Кнопки в модалке */
+        .btn-confirm-save {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-cancel {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+        }
     </style>
+    <script>
+    let currentTab = 'users';
+
+    async function loadData() {
+        const grid = document.getElementById('admin-grid');
+        grid.innerHTML = '<p>Загрузка...</p>';
+
+        // Вызываем метод в зависимости от активной вкладки
+        const method = currentTab === 'users' ? 'admin_get_users' : 'admin_get_ads';
+        
+        const response = await fetch('/RGZ/api', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jsonrpc: "2.0", method: method, params: {}, id: 1 })
+        });
+        
+        const data = await response.json();
+        const items = data.result || [];
+
+        // Обновляем счетчики в табах
+        if (currentTab === 'users') document.getElementById('count-users').innerText = `(${items.length})`;
+        else document.getElementById('count-ads').innerText = `(${items.length})`;
+
+        if (items.length === 0) {
+            grid.innerHTML = '<p>Ничего не найдено.</p>';
+            return;
+        }
+
+        if (currentTab === 'users') {
+            grid.innerHTML = items.map(user => `
+                <div class="admin-card">
+                    <div class="user-row">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${user.login}" class="user-avatar">
+                        <div class="user-details">
+                            <b>${user.name}</b>
+                            <span>@${user.login}</span>
+                            <span><i class="fa-regular fa-envelope"></i> ${user.email || 'нет email'}</span>
+                        </div>
+                    </div>
+                    <p class="bio">${user.about_me || '<i>Био отсутствует</i>'}</p>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn-edit-user" onclick="editUser(${user.id}, '${user.name.replace(/'/g, "\\'")}', '${(user.email || '').replace(/'/g, "\\'")}', '${(user.about_me || '').replace(/'/g, "\\'")}')">
+                            <i class="fa-solid fa-pen"></i> Редактировать
+                        </button>
+                        ${user.login !== 'admin' ? `
+                            <button class="btn-delete-small" onclick="deleteUser(${user.id})">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        ` : '<span style="font-size: 12px; color: #aaa;">Это вы</span>'}
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            grid.innerHTML = items.map(ad => `
+                <div class="ad-admin-card">
+                    <i class="fa-solid fa-trash trash-abs" onclick="deleteAd(${ad.id})"></i>
+                    <span class="author">Автор: ${ad.login}</span>
+                    <h3>${ad.title}</h3>
+                    <p class="bio">${ad.content.substring(0, 100)}...</p>
+                </div>
+            `).join('');
+        }
+    }
+
+    function switchTab(tab) {
+        currentTab = tab;
+        document.getElementById('tab-users').classList.toggle('active', tab === 'users');
+        document.getElementById('tab-ads').classList.toggle('active', tab === 'ads');
+        loadData();
+    }
+
+    async function deleteUser(userId) {
+        if (confirm("Удалить пользователя и все его объявления?")) {
+            await fetch('/RGZ/api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ jsonrpc: "2.0", method: "delete_user", params: { user_id: userId }, id: 1 })
+            });
+            loadData();
+        }
+    }
+
+    async function deleteAd(adId) {
+        if (confirm("Удалить это объявление?")) {
+            await fetch('/RGZ/api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ jsonrpc: "2.0", method: "delete_ad", params: { id: adId }, id: 1 })
+            });
+            loadData();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
+    // Функция открытия модального окна с данными пользователя
+    function editUser(id, name, email, bio) {
+        document.getElementById('edit-user-id').value = id;
+        document.getElementById('edit-user-name').value = name;
+        document.getElementById('edit-user-email').value = email === 'нет email' ? '' : email;
+        document.getElementById('edit-user-bio').value = bio === 'Био отсутствует' ? '' : bio;
+        
+        document.getElementById('editUserModal').style.display = 'flex';
+    }
+
+    // Функция сохранения
+    async function saveUserEdit() {
+        const params = {
+            user_id: document.getElementById('edit-user-id').value,
+            name: document.getElementById('edit-user-name').value,
+            email: document.getElementById('edit-user-email').value,
+            about_me: document.getElementById('edit-user-bio').value
+        };
+
+        const response = await fetch('/RGZ/api', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                jsonrpc: "2.0", 
+                method: "admin_edit_user", // Новый метод для бэкенда
+                params: params, 
+                id: 1 
+            })
+        });
+
+        const data = await response.json();
+        if (data.result === 'success') {
+            closeModal('editUserModal');
+            loadData(); // Перезагружаем список
+        } else {
+            alert("Ошибка при сохранении: " + data.error.message);
+        }
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+    </script>
 {% endblock %}

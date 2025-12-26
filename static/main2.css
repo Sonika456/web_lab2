@@ -207,10 +207,8 @@ header.scrolled {
 .card p { color: #666; font-size: 15px; line-height: 1.5; margin: 0; }
 
 footer {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    position: relative;
+    margin-top: 20px;
     background-color: #fcfaf8;
     padding: 40px 10%;
     border-top: 1px solid #eee;

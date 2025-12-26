@@ -326,6 +326,49 @@
             border: 2px solid #c66b2d; color: #c66b2d; background: white;
             padding: 8px 20px; border-radius: 12px; cursor: pointer;
         }
+        .empty-state-card {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+
+        .empty-state-card i {
+            font-size: 48px;
+            color: #8d7e71; /* Цвет иконки как на макете */
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .empty-state-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2c2c2c;
+        }
+
+        .empty-state-card p {
+            color: #aaa;
+            margin-bottom: 25px;
+        }
+
+        .btn-create-large {
+            display: inline-block;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .btn-create-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(198, 107, 45, 0.3);
+        }
     </style>
 
     <script>
@@ -362,21 +405,32 @@
         document.getElementById('ad-count-label').innerText = `${ads.length} объявл.`;
         const container = document.getElementById('my-ads-container');
 
-        container.innerHTML = ads.map(ad => `
-            <div class="ad-card-mini" id="ad-${ad.id}">
-                <div class="ad-controls" style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
-                    <i class="bi bi-pen" onclick="editAd(${ad.id}, '${ad.title}', '${ad.content.replace(/'/g, "\\'")}')" 
-                    title="Редактировать" style="cursor: pointer; color: #aaa;" onmouseover="this.style.color='#e69143'" onmouseout="this.style.color='#aaa'"></i>
-                    
-                    <i class="bi bi-trash3" onclick="deleteAd(${ad.id})" 
-                    title="Удалить" style="cursor: pointer; color: #aaa;" onmouseover="this.style.color='#dc3545'" onmouseout="this.style.color='#aaa'"></i>
+        // Если объявления есть — выводим список, если нет — красивый блок
+        if (ads.length > 0) {
+            container.innerHTML = ads.map(ad => `
+                <div class="ad-card-mini" id="ad-${ad.id}">
+                    <div class="ad-controls" style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
+                        <i class="bi bi-pen" onclick="editAd(${ad.id}, '${ad.title}', '${ad.content.replace(/'/g, "\\'")}')" 
+                        title="Редактировать" style="cursor: pointer; color: #aaa;"></i>
+                        <i class="bi bi-trash3" onclick="deleteAd(${ad.id})" 
+                        title="Удалить" style="cursor: pointer; color: #aaa;"></i>
+                    </div>
+                    <h3 style="font-family: 'Playfair Display', serif; margin: 0 0 10px; padding-right: 50px;">${ad.title}</h3>
+                    <p style="color: #777; font-size: 14px; line-height: 1.5;">${ad.content}</p>
+                    <small style="color: #ccc; font-size: 11px;"><i class="bi bi-calendar-event"></i> ${ad.created_at}</small>
                 </div>
-
-                <h3 style="font-family: 'Playfair Display', serif; margin: 0 0 10px; padding-right: 50px;">${ad.title}</h3>
-                <p style="color: #777; font-size: 14px; line-height: 1.5;">${ad.content}</p>
-                <small style="color: #ccc; font-size: 11px;"><i class="bi bi-calendar-event"></i> ${ad.created_at}</small>
-            </div>
-        `).join('') || '<p>У вас пока нет объявлений.</p>';
+            `).join('');
+        } else {
+            // ВОТ ЭТОТ БЛОК ОТВЕЧАЕТ ЗА КАРТИНКУ "НЕТ ОБЪЯВЛЕНИЙ"
+            container.innerHTML = `
+                <div class="empty-state-card">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <h3>У вас пока нет объявлений</h3>
+                    <p>Создайте своё первое объявление</p>
+                    <a href="/RGZ/create" class="btn-create-large">Создать объявление</a>
+                </div>
+            `;
+        }
     }
 
     // Функция для редактирования (через prompt для простоты или можно сделать модальное окно)

@@ -1,10 +1,8 @@
-from flask import Blueprint, url_for, render_template, request, redirect, jsonify, session
+from flask import Blueprint, render_template, request, jsonify, session
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import check_password_hash, generate_password_hash
-import sqlite3
 import re
-from os import path
 
 RGZ = Blueprint('RGZ', __name__)
 
@@ -312,6 +310,52 @@ def api():
                 cur.execute("UPDATE ads SET title = %s, content = %s WHERE id = %s AND user_id = %s", 
                             (title, content, ad_id, user_id))
             
+            conn.commit()
+            return jsonify({"jsonrpc": "2.0", "result": "success", "id": id})
+        except Exception as e:
+            return jsonify({"jsonrpc": "2.0", "error": {"message": str(e)}, "id": id})
+        finally:
+            cur.close()
+            conn.close()
+    is_admin = session.get('user_login') == 'admin'
+
+    if method == 'admin_get_users' and is_admin:
+        conn = db_connect()
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        cur.execute("SELECT id, login, name, email, about_me FROM users ORDER BY id DESC")
+        users = cur.fetchall()
+        cur.close()
+        conn.close()
+        return jsonify({"jsonrpc": "2.0", "result": users, "id": id})
+
+    if method == 'admin_get_ads' and is_admin:
+        conn = db_connect()
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+        # Получаем объявления вместе с логинами авторов
+        cur.execute("""
+            SELECT ads.*, users.login 
+            FROM ads 
+            JOIN users ON ads.user_id = users.id 
+            ORDER BY ads.id DESC
+        """)
+        ads = cur.fetchall()
+        cur.close()
+        conn.close()
+        return jsonify({"jsonrpc": "2.0", "result": ads, "id": id})
+    if method == 'admin_edit_user' and is_admin:
+        user_id = params.get('user_id')
+        name = params.get('name')
+        email = params.get('email')
+        about_me = params.get('about_me')
+
+        conn = db_connect()
+        cur = conn.cursor()
+        try:
+            cur.execute("""
+                UPDATE users 
+                SET name = %s, email = %s, about_me = %s 
+                WHERE id = %s
+            """, (name, email, about_me, user_id))
             conn.commit()
             return jsonify({"jsonrpc": "2.0", "result": "success", "id": id})
         except Exception as e:
