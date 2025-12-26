@@ -1,0 +1,201 @@
+{% extends "base2.html" %}
+
+{% block main %}
+    <div class="main-content">
+        <a href="/RGZ/" class="back-link">← На главную</a>
+
+        <div class="admin-header">
+            <div class="shield-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div>
+                <h1>Администрирование</h1>
+                <p>Управление пользователями и объявлениями</p>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <a href="#" class="tab active"><i class="fa-solid fa-users"></i> Пользователи (2)</a>
+            <a href="#" class="tab"><i class="fa-solid fa-file-lines"></i> Объявления (3)</a>
+        </div>
+
+        <div class="admin-grid">
+            <div class="admin-card">
+                <div class="user-row">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ivan" class="user-avatar" alt="">
+                    <div class="user-details">
+                        <b>Иван Петров</b>
+                        <span>@ivan</span>
+                        <span><i class="fa-regular fa-envelope"></i> ivan@example.com</span>
+                    </div>
+                </div>
+                <p class="bio">Люблю программирование</p>
+                <button class="btn-delete-full"><i class="fa-solid fa-trash"></i> Удалить</button>
+            </div>
+
+            <div class="admin-card">
+                <div class="user-row">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" class="user-avatar" alt="">
+                    <div class="user-details">
+                        <b>Мария Сидорова</b>
+                        <span>@maria</span>
+                        <span><i class="fa-regular fa-envelope"></i> maria@example.com</span>
+                    </div>
+                </div>
+                <div style="height: 38px;"></div> <button class="btn-delete-full"><i class="fa-solid fa-trash"></i> Удалить</button>
+            </div>
+        </div>
+    </div>
+    <style>
+        .btn-create {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .profile-pic {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            padding: 40px 10%;
+            margin-top: 50px; /* Отступ от фиксированной шапки */
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        /* Заголовок с щитом */
+        .admin-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .shield-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 10px 20px rgba(230, 145, 67, 0.2);
+        }
+
+        .admin-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            margin: 0;
+        }
+
+        .admin-header p {
+            margin: 5px 0 0;
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        /* Табы (Переключатели) */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #eee;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-gray);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .tab.active {
+            background: #fff;
+            color: var(--text-main);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Сетка карточек */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            position: relative;
+        }
+
+        .user-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .user-details b { display: block; font-size: 16px; }
+        .user-details span { color: #aaa; font-size: 13px; display: block; }
+
+        .bio { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; }
+
+        /* Кнопка удаления */
+        .btn-delete-full {
+            width: 100%;
+            padding: 10px;
+            background: white;
+            border: 1px solid #f8d7da;
+            color: var(--danger);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-delete-full:hover { background: #fff5f5; }
+
+        .trash-abs {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        
+        .trash-abs:hover { color: var(--danger); }
+    </style>
+{% endblock %}

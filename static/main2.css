@@ -1,0 +1,319 @@
+:root {
+    --primary-gradient: linear-gradient(135deg, #e69143, #c66b2d);
+    --bg-gradient: radial-gradient(circle at center, #faf6f1 0%, #f3ece2 100%);
+    --text-main: #2c2c2c;
+    --bg-color: #fdfaf7;
+    --text-gray: #777;
+    --danger: #dc3545;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text-main);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 10%;
+    background: rgba(255, 255, 255, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+header.scrolled {
+    background: rgba(255, 255, 255, 0.8); 
+    backdrop-filter: blur(10px); 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+    padding: 10px 10%; 
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo-box {
+    width: 32px;
+    height: 32px;
+    background: var(--primary-gradient);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav a {
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 500;
+    color: #333;
+}
+.btn-log{
+    background: white;
+    padding: 8px 20px;
+    border-radius: 8px;
+    color: #2c2c2c;
+}
+.btn-log:hover{
+    background: #e9e9e9;
+}
+
+.btn-reg {
+    background: var(--primary-gradient);
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 8px;
+}
+.btn-reg:hover {
+    background: linear-gradient(135deg, #f3a154, #e07a36);
+}
+
+.btn-create {
+    background: var(--primary-gradient);
+    color: white !important;
+    padding: 8px 20px;
+    border-radius: 8px; 
+}
+.btn-create:hover {
+    background: linear-gradient(135deg, #f3a154, #e07a36);
+}
+
+/* Приветственная секция */
+.hero {
+    margin-top: 80px;
+    text-align: center;
+    padding: 80px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-icon {
+    width: 70px;
+    height: 70px;
+    background: var(--primary-gradient);
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 35px;
+    margin: 0 auto 30px;
+    box-shadow: 0 10px 20px rgba(198, 107, 45, 0.2);
+    text-decoration: none;
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 75px;
+    margin: 0 0 15px;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #857264;
+    margin-bottom: 35px;
+}
+
+.hero-btns {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-main {
+    padding: 14px 30px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-filled { background: var(--primary-gradient); color: white; }
+.btn-filled:hover {
+    background: linear-gradient(135deg, #f3a154, #e07a36);
+}
+.btn-outline { border: 2px solid #c66b2d; color: #c66b2d; }
+.btn-outline:hover {
+    background: linear-gradient(135deg, #e69143, #c66b2d); 
+    color: #ffffff;
+}
+
+
+/* Секция объявлений */
+.ads-section {
+    padding: 60px 10%;
+    background: #faf8f5;
+}
+
+.section-header { margin-bottom: 40px; }
+.section-header h2 { font-family: 'Playfair Display', serif; font-size: 32px; margin: 0; }
+.section-header span { color: var(--text-secondary); }
+
+.ads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+    gap: 25px;
+    padding: 20px 0;
+    
+}
+
+.card {
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    padding: 25px;
+    background: #fdfdfc;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+}
+
+.card-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #eee;
+    object-fit: cover;
+}
+
+.user-info b { display: block; font-size: 16px; }
+.user-info small { color: #aaa; font-size: 12px; }
+
+.card h3 { font-family: 'Playfair Display', serif; margin: 0 0 10px; font-size: 22px; }
+.card p { color: #666; font-size: 15px; line-height: 1.5; margin: 0; }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #fcfaf8;
+    padding: 40px 10%;
+    border-top: 1px solid #eee;
+    display: block;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.ad-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.ad-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.author-avatar { width: 40px; height: 40px; border-radius: 50%; }
+.author-info { display: flex; flex-direction: column; flex-grow: 1; }
+.author-email { font-size: 12px; color: #c66b2d; }
+.ad-date { font-size: 12px; color: #aaa; }
+.ad-title { font-family: 'Playfair Display', serif; margin: 10px 0; }
+.ad-content { color: #555; line-height: 1.5; font-size: 14px; }
+
+/* Контейнер для кнопки и профиля */
+.auth-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Расстояние между кнопкой и аватаркой */
+}
+
+/* Рамка для аватарки */
+.profile-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 2px solid #c66b2d; /* Цвет рамки */
+    border-radius: 12px; /* Скругление рамки (как у логотипа) */
+    padding: 2px;
+    transition: 0.3s;
+    background: white;
+}
+
+.profile-wrapper:hover {
+    border-color: #e69143;
+    transform: translateY(-2px);
+}
+
+.nav-container {
+    max-width: 1200px; /* Фиксированная максимальная ширина для всех страниц */
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+/* Унифицированный стиль аватарки в шапке */
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.profile-pic:hover {
+    transform: scale(1.05);
+}
+
+/* Стили для иконки выхода */
+.logout-link {
+    color: var(--text-secondary);
+    font-size: 18px;
+    text-decoration: none;
+    transition: 0.3s;
+    margin-left: 5px;
+}
+
+.logout-link:hover {
+    color: #c66b2d;
+}
+
+/* Убедимся, что навигация не разъезжается */
+.user-nav {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Убираем подчеркивание у всех ссылок в навигаторе */
+.user-nav a {
+    text-decoration: none;
+}

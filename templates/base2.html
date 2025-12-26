@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>Черевцова Софья. {% block lab %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main2.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <style>
+        .user-menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none; /* Скрыто по умолчанию */
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: white;
+            min-width: 240px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 15px 0;
+            border: 1px solid #eee;
+        }
+
+        .dropdown-header {
+            padding: 5px 20px 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dropdown-header strong { font-size: 16px; color: #2c2c2c; }
+        .user-email { font-size: 13px; color: #777; margin-bottom: 5px; }
+
+        .admin-badge {
+            color: #c66b2d;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #444;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: #fdf8f4;
+            color: #c66b2d;
+        }
+
+        .logout-link { color: #dc3545; }
+        .logout-link:hover { background: #fff5f5; color: #dc3545; }
+
+        hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
+
+        /* Показать меню при активном классе */
+        .dropdown-menu.show { display: block; }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const trigger = document.getElementById('avatar-trigger');
+            const menu = document.getElementById('userDropdown');
+
+            // Переключение меню
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                menu.classList.toggle('show');
+            });
+
+            // Закрытие при клике вне меню
+            document.addEventListener('click', function(e) {
+                if (!menu.contains(e.target) && e.target !== trigger) {
+                    menu.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/RGZ/" class="logo-box"><i class="bi bi-clipboard"></i></a>
+            Доска Объявлений
+        </div>
+        <div class="user-nav">
+            {% if session.user_id %}
+                <a href="/RGZ/create" class="btn-create"><i class="fa-solid fa-plus"></i> Создать</a>
+                
+                <div class="user-menu-container">
+                    <img src="{% if session.user_avatar %}{{ session.user_avatar }}{% else %}https://api.dicebear.com/7.x/avataaars/svg?seed={{ session.user_login }}{% endif %}" 
+                        class="profile-pic"  id="avatar-trigger" alt="User Avatar" style="cursor: pointer; object-fit: cover; width: 40px; height: 40px; border-radius: 50%;">
+
+                    <div class="dropdown-menu" id="userDropdown">
+                        <div class="dropdown-header">
+                            <strong>{{ session.user_name }}</strong>
+                            {% if session.user_login == 'admin' %}
+                                <div class="admin-badge"><i class="fa-solid fa-shield-halved"></i> Администратор</div>
+                            {% endif %}
+                        </div>
+                        
+                        <hr>
+                        
+                        <a href="/RGZ/profile" class="dropdown-item">
+                            <i class="fa-regular fa-user"></i> Профиль
+                        </a>
+                        
+                        {% if session.user_login == 'admin' %}
+                        <a href="/RGZ/admin" class="dropdown-item">
+                            <i class="fa-solid fa-shield"></i> Администрирование
+                        </a>
+                        {% endif %}
+                        
+                        <hr>
+                        
+                        <a href="/RGZ/logout" class="dropdown-item logout-link">
+                            <i class="bi bi-box-arrow-right"></i> Выйти
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/RGZ/login" class="dropdown-item" style="display: inline-block;">Вход</a>
+                <a href="/RGZ/reg" class="btn-create" style="text-decoration: none; display: inline-block;">Регистрация</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        {% block main %}{% endblock %}
+    </main>
+
+    <footer>
+        <div><i class="bi bi-clipboard"></i> Доска Объявлений © 2024</div>
+        <div style="text-align: right;">
+            <strong>Студентка: Черевцова С. К.</strong><br>
+            Группа: ФБИ-34. Курс 3
+        </div>
+    </footer>
+</body>
+</html>

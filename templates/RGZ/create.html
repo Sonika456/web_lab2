@@ -1,0 +1,243 @@
+{% extends "base2.html" %}
+
+{% block main %}
+    <div class="main-content">
+        <a href="/RGZ/" class="back-link"><i class="fa-solid fa-arrow-left"></i> На главную</a>
+
+        <div class="create-card">
+            <div class="create-icon"><i class="fa-solid fa-file-signature"></i></div>
+            <h1>Новое объявление</h1>
+            <p class="subtitle">Заполните форму для создания нового объявления</p>
+
+            <form id="createAdForm">
+                <div class="form-group">
+                    <label>Заголовок <span class="required">*</span></label>
+                    <input type="text" id="title" placeholder="Введите заголовок объявления" maxlength="100" required>
+                    <div class="char-count" id="title-counter">0/100</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Текст объявления <span class="required">*</span></label>
+                    <textarea id="content" placeholder="Опишите ваше объявление подробно..." maxlength="2000" required></textarea>
+                    <div class="char-count" id="content-counter">0/2000</div>
+                </div>
+
+                <div id="error-message" style="color: #c66b2d; font-size: 14px; margin-bottom: 10px; display: none;"></div>
+
+                <div class="actions">
+                    <a href="/RGZ/" class="btn-action btn-cancel">Отмена</a>
+                    <button type="submit" class="btn-action btn-publish">
+                        <i class="fa-solid fa-paper-plane"></i> Опубликовать
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <style>
+        .btn-create-nav {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Контейнер формы */
+        .main-content {
+            margin-top: 50px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            font-size: 14px;
+            align-self: center;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .create-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .create-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: 28px; margin: 0 0 10px; }
+        .subtitle { color: var(--text-gray); font-size: 14px; margin-bottom: 35px; }
+
+        /* Поля ввода */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .required { color: #c66b2d; }
+
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #eee;
+            background: #fafafa;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #e69143;
+            background: white;
+        }
+
+        textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: #bbb;
+            margin-top: 5px;
+        }
+
+        /* Кнопки внизу */
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            background: white;
+            color: #c77340;
+            border: 2px solid #c1642b;
+        }
+
+        .btn-cancel:hover { background: #fff8f4; }
+
+        .btn-publish {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+        }
+
+        .btn-publish:hover { opacity: 0.9; transform: translateY(-1px); }
+    </style>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const titleInput = document.getElementById('title');
+        const contentInput = document.getElementById('content');
+        const titleCounter = document.getElementById('title-counter');
+        const contentCounter = document.getElementById('content-counter');
+
+        // Живой счетчик символов
+        titleInput.oninput = () => titleCounter.innerText = `${titleInput.value.length}/100`;
+        contentInput.oninput = () => contentCounter.innerText = `${contentInput.value.length}/2000`;
+
+        // Отправка формы
+        document.getElementById('createAdForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'none';
+
+            const title = titleInput.value;
+            const content = contentInput.value;
+
+            try {
+                const response = await fetch('/RGZ/api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: "2.0",
+                        method: "create_ad",
+                        params: { title, content },
+                        id: 1
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    errorDiv.innerText = data.error.message;
+                    errorDiv.style.display = 'block';
+                } else {
+                    alert("Объявление успешно опубликовано!");
+                    window.location.href = '/RGZ/';
+                }
+            } catch (e) {
+                errorDiv.innerText = "Ошибка соединения с сервером";
+                errorDiv.style.display = 'block';
+            }
+        };
+    });
+    </script>
+{% endblock %}

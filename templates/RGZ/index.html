@@ -1,0 +1,133 @@
+{% extends "base2.html" %}
+
+{% block main %}
+    <div class="hero">
+        <a href="/RGZ/" class="hero-icon"><i class="bi bi-clipboard"></i></a>
+        <h1>Доска Объявлений</h1>
+        <p>Размещайте объявления, находите нужное и общайтесь с другими пользователями</p>
+        
+        {% if not session.user_login %}
+        <div class="hero-btns">
+            <a href="/RGZ/reg" class="btn-main btn-filled">Зарегистрироваться</a>
+            <a href="/RGZ/login" class="btn-main btn-outline">Войти</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="ads-section">
+        <div class="section-header">
+            <h2>Последние объявления</h2>
+            </div>
+
+        <div class="ads-grid" id="adsGrid">
+            <p style="text-align: center; color: #777;">Загрузка объявлений...</p>
+        </div>
+    </div>
+
+    <script>
+    // Твой скрипт остается без изменений, он теперь найдет id="adsGrid"
+    async function loadAds() {
+        try {
+            const response = await fetch('/RGZ/api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: "2.0",
+                    method: "get_ads",
+                    params: {},
+                    id: 1
+                })
+            });
+
+            const data = await response.json();
+            const ads = data.result;
+            const container = document.getElementById('adsGrid');
+
+            const currentUserLogin = "{{ session.user_login }}"; // Добавили эту строку
+            const currentUserId = "{{ session.user_id }}";
+            const isAdmin = (currentUserLogin === "admin");
+            
+            if (!ads || ads.length === 0) {
+                container.innerHTML = '<p class="empty-msg" style="grid-column: 1/-1; text-align: center; padding: 40px;">Объявлений пока нет. Станьте первым!</p>';
+                return;
+            }
+
+            // Очищаем контейнер перед вставкой
+            container.innerHTML = ads.map(ad => {
+                // Проверяем: является ли текущий пользователь админом или автором этого объявления
+                const canDelete = (currentUserLogin === 'admin') || (String(ad.user_id) === String(currentUserId));
+
+                return `
+                    <div class="ad-card" style="background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: relative;">
+                        
+                        ${canDelete ? `
+                            <div class="ad-controls" style="position: absolute; top: 20px; right: 20px;">
+                                <i class="fa-solid fa-trash" 
+                                onclick="deleteAd(${ad.id})" 
+                                title="Удалить объявление"
+                                style="color: #ccc; cursor: pointer; transition: 0.3s;"
+                                onmouseover="this.style.color='#dc3545'" 
+                                onmouseout="this.style.color='#ccc'"></i>
+                            </div>
+                        ` : ''}
+
+                        <div class="ad-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${ad.author_login}" 
+                                class="author-avatar" 
+                                style="width: 45px; height: 45px; border-radius: 50%; background: #f0f0f0;">
+                            
+                            <div class="author-info" style="display: flex; flex-direction: column; flex-grow: 1;">
+                                <strong style="font-size: 16px;">${ad.author_name}</strong>
+                                ${ad.author_email ? `
+                                    <span class="author-email" style="font-size: 13px; color: #c66b2d;">
+                                        <i class="fa-regular fa-envelope"></i> ${ad.author_email}
+                                    </span>` : ''}
+                            </div>
+                            
+                            <span class="ad-date" style="font-size: 12px; color: #aaa;">${ad.created_at}</span>
+                        </div>
+
+                        <h3 class="ad-title" style="font-family: 'Playfair Display', serif; font-size: 22px; margin: 10px 0; color: #2c2c2c;">
+                            ${ad.title}
+                        </h3>
+                        
+                        <p class="ad-content" style="color: #555; line-height: 1.6; font-size: 15px; margin: 0;">
+                            ${ad.content}
+                        </p>
+                    </div>
+                `;
+            }).join('');
+
+        } catch (e) {
+            console.error("Ошибка загрузки объявлений:", e);
+            document.getElementById('adsGrid').innerHTML = '<p>Ошибка при загрузке данных.</p>';
+        }
+    }
+    async function deleteAd(adId) {
+        if (!confirm("Вы уверены, что хотите удалить это объявление?")) return;
+
+        try {
+            const response = await fetch('/RGZ/api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: "2.0",
+                    method: "delete_ad",
+                    params: { id: adId },
+                    id: 1
+                })
+            });
+
+            const data = await response.json();
+            if (data.result === "success") {
+                loadAds(); // Перезагружаем список
+            } else {
+                alert("Ошибка при удалении: " + (data.error ? data.error.message : "неизвестная ошибка"));
+            }
+        } catch (e) {
+            console.error("Ошибка запроса:", e);
+        }
+    }
+    document.addEventListener('DOMContentLoaded', loadAds);
+    </script>
+{% endblock %}
