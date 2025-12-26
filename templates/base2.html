@@ -13,9 +13,8 @@
             position: relative;
             display: inline-block;
         }
-
         .dropdown-menu {
-            display: none; /* Скрыто по умолчанию */
+            display: none; 
             position: absolute;
             right: 0;
             top: 50px;
@@ -27,16 +26,13 @@
             padding: 15px 0;
             border: 1px solid #eee;
         }
-
         .dropdown-header {
             padding: 5px 20px 10px;
             display: flex;
             flex-direction: column;
         }
-
         .dropdown-header strong { font-size: 16px; color: #2c2c2c; }
         .user-email { font-size: 13px; color: #777; margin-bottom: 5px; }
-
         .admin-badge {
             color: #c66b2d;
             font-size: 12px;
@@ -45,7 +41,6 @@
             align-items: center;
             gap: 5px;
         }
-
         .dropdown-item {
             display: flex;
             align-items: center;
@@ -56,32 +51,23 @@
             transition: 0.2s;
             font-size: 14px;
         }
-
         .dropdown-item:hover {
             background: #fdf8f4;
             color: #c66b2d;
         }
-
         .logout-link { color: #dc3545; }
         .logout-link:hover { background: #fff5f5; color: #dc3545; }
-
         hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
-
-        /* Показать меню при активном классе */
         .dropdown-menu.show { display: block; }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const trigger = document.getElementById('avatar-trigger');
             const menu = document.getElementById('userDropdown');
-
-            // Переключение меню
             trigger.addEventListener('click', function(e) {
                 e.stopPropagation();
                 menu.classList.toggle('show');
             });
-
-            // Закрытие при клике вне меню
             document.addEventListener('click', function(e) {
                 if (!menu.contains(e.target) && e.target !== trigger) {
                     menu.classList.remove('show');

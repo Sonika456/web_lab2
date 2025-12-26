@@ -31,136 +31,12 @@
         <div class="test-accounts">
             <strong>Тестовые аккаунты:</strong><br>
             Админ: <code>admin</code><br>
-            Пароль: 147asd
+            Пароль: 147asd<br>
             Пользователи: <code>ivan</code> или <code>maria</code><br>
-            Пароль: 89632zaq
+            Пароль: 963qwe и 89632zaq
         </div>
     </div>
 </div>
-    <style>
-        /* Основной контейнер */
-        .login-container {
-            margin-top: 80px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: var(--text-gray);
-            margin-bottom: 20px;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        .back-link:hover { color: #c66b2d; }
-
-        /* Карточка формы */
-        .login-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .login-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-gradient);
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 24px;
-            margin: 0 auto 20px;
-        }
-
-        h1 { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 10px; }
-        .subtitle { color: var(--text-gray); font-size: 14px; margin-bottom: 30px; }
-
-        /* Поля ввода */
-        .form-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 14px;
-            box-sizing: border-box; /* Чтобы padding не раздувал ширину */
-        }
-
-        .pass-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-gray);
-            cursor: pointer;
-        }
-
-        /* Кнопка */
-        .btn-login {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: var(--primary-gradient);
-            color: white;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
-        }
-
-        .btn-login:hover { opacity: 0.9; }
-
-        .reg-link {
-            display: block;
-            margin-top: 20px;
-            font-size: 14px;
-            color: var(--text-gray);
-            text-decoration: none;
-        }
-
-        .reg-link span { color: #c66b2d; font-weight: 500; }
-
-        /* Блок подсказки */
-        .test-accounts {
-            background: #f0f0ed;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 30px;
-            text-align: left;
-            font-size: 13px;
-            color: #555;
-            line-height: 1.6;
-        }
-    </style>
     <script>
     async function loginUser(event) {
         event.preventDefault();
@@ -189,7 +65,6 @@
                 errorDiv.innerText = data.error.message;
                 errorDiv.style.display = 'block';
             } else {
-                // Успешный вход — перенаправляем на главную
                 window.location.href = '/RGZ/';
             }
         } catch (e) {

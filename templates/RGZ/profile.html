@@ -77,300 +77,6 @@
             </div>
         </div>
     </div>
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #e69143, #c66b2d);
-            --bg-color: #f9f6f2;
-            --text-main: #2c2c2c;
-            --text-gray: #777;
-            --danger: #dc3545;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            font-weight: bold;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .logo-box {
-            width: 32px;
-            height: 32px;
-            background: var(--primary-gradient);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-
-        .user-nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .btn-create {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .profile-pic {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        /* Контейнер профиля */
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-            display: flex;
-            gap: 30px;
-        }
-
-        .back-nav {
-            margin: 20px 10%;
-            font-size: 14px;
-        }
-        .back-nav a { text-decoration: none; color: var(--text-gray); }
-
-        /* Левая колонка: Редактирование */
-        .profile-settings {
-            flex: 1;
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            height: fit-content;
-        }
-
-        .avatar-large-container {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .avatar-large {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid #fef4ea;
-            margin-bottom: 10px;
-        }
-
-        .profile-name { font-size: 22px; font-weight: 600; margin-bottom: 5px; }
-        .profile-handle { color: #aaa; font-size: 14px; margin-bottom: 20px; }
-
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
-        
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            background: #fafafa;
-            font-family: inherit;
-            box-sizing: border-box;
-        }
-
-        .btn-save {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-delete {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            color: var(--danger);
-            border: 1px solid #be2532;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        /* Правая колонка: Объявления */
-        .my-ads {
-            flex: 2;
-        }
-
-        .section-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .info-icon {
-            width: 45px;
-            height: 45px;
-            background: #e9d5c1;
-            color: #c66b2d;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 12px;
-            font-size: 20px;
-        }
-
-        .ad-card-mini {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        }
-
-        .ad-card-mini .card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .ad-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 15px;
-            color: #ccc;
-        }
-
-        .ad-controls i:hover { color: #c66b2d; cursor: pointer; }
-
-        .ad-card-mini h3 { font-family: 'Playfair Display', serif; margin: 0 0 10px; }
-        .ad-card-mini p { color: var(--text-gray); font-size: 14px; line-height: 1.5; }
-
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: flex; gap: 30px; }
-        .profile-settings { flex: 1; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); height: fit-content; }
-        .avatar-large { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #fef4ea; margin-bottom: 10px; }
-        .btn-save { width: 100%; padding: 12px; background: var(--primary-gradient); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-delete { width: 100%; padding: 12px; background: transparent; color: var(--danger); border: 1px solid #be2532; border-radius: 10px; cursor: pointer; }
-        .my-ads { flex: 2; }
-        .ad-card-mini { background: white; border-radius: 15px; padding: 25px; margin-bottom: 20px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .ad-controls { position: absolute; top: 20px; right: 20px; color: #ccc; cursor: pointer; }
-        /* Оверлей для модалок */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center; align-items: center;
-        }
-
-        /* Контент окна */
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%; max-width: 600px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .modal-input, .modal-textarea {
-            width: 100%; margin-top: 15px;
-            padding: 12px; border: 1px solid #eee;
-            border-radius: 10px; font-family: inherit;
-        }
-
-        .modal-textarea { height: 150px; resize: none; }
-
-        /* Кнопки в модалках */
-        .modal-actions {
-            display: flex; justify-content: flex-end;
-            gap: 15px; margin-top: 20px;
-        }
-
-        .btn-confirm-save {
-            background: #c66b2d; color: white; border: none;
-            padding: 10px 25px; border-radius: 12px; cursor: pointer;
-        }
-
-        .btn-danger {
-            background: #dc3545; color: white; border: none;
-            padding: 10px 25px; border-radius: 12px; cursor: pointer;
-        }
-
-        .btn-cancel { border: none; background: none; cursor: pointer; color: #777; }
-        .btn-cancel-outline { 
-            border: 2px solid #c66b2d; color: #c66b2d; background: white;
-            padding: 8px 20px; border-radius: 12px; cursor: pointer;
-        }
-        .empty-state-card {
-            background: white;
-            border-radius: 20px;
-            padding: 60px 40px;
-            text-align: center;
-            border: 1px solid #f0f0f0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-        }
-
-        .empty-state-card i {
-            font-size: 48px;
-            color: #8d7e71; /* Цвет иконки как на макете */
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .empty-state-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #2c2c2c;
-        }
-
-        .empty-state-card p {
-            color: #aaa;
-            margin-bottom: 25px;
-        }
-
-        .btn-create-large {
-            display: inline-block;
-            background: var(--primary-gradient);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-
-        .btn-create-large:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(198, 107, 45, 0.3);
-        }
-    </style>
-
     <script>
     async function loadProfile() {
         const response = await fetch('/RGZ/api', {
@@ -405,7 +111,6 @@
         document.getElementById('ad-count-label').innerText = `${ads.length} объявл.`;
         const container = document.getElementById('my-ads-container');
 
-        // Если объявления есть — выводим список, если нет — красивый блок
         if (ads.length > 0) {
             container.innerHTML = ads.map(ad => `
                 <div class="ad-card-mini" id="ad-${ad.id}">
@@ -421,7 +126,6 @@
                 </div>
             `).join('');
         } else {
-            // ВОТ ЭТОТ БЛОК ОТВЕЧАЕТ ЗА КАРТИНКУ "НЕТ ОБЪЯВЛЕНИЙ"
             container.innerHTML = `
                 <div class="empty-state-card">
                     <i class="bi bi-file-earmark-text"></i>
@@ -433,20 +137,17 @@
         }
     }
 
-    // Функция для редактирования (через prompt для простоты или можно сделать модальное окно)
     function editAd(adId, title, content) {
         currentEditId = adId;
         document.getElementById('edit-title').value = title;
         document.getElementById('edit-content').value = content;
-        
-        // Подтягиваем данные из профиля для красоты в модалке
+    
         document.getElementById('modal-author-name').innerText = document.getElementById('profile-name-display').innerText;
         document.getElementById('modal-author-email').innerText = document.getElementById('input-email').value;
         document.getElementById('modal-avatar').src = document.getElementById('profile-avatar').src;
 
         document.getElementById('editModal').style.display = 'flex';
     }
-    // Сохранение после редактирования
     async function saveEdit() {
         const title = document.getElementById('edit-title').value;
         const content = document.getElementById('edit-content').value;
@@ -459,18 +160,15 @@
                 params: { id: currentEditId, title, content }, id: 1
             })
         });
-        
         closeModal('editModal');
         loadMyAds();
     }
-    // Кастомное окно удаления
     function deleteAd(adId) {
         const modal = document.getElementById('deleteModal');
         const confirmBtn = document.getElementById('confirmDeleteBtn');
         
         modal.style.display = 'flex';
-        
-        // Привязываем действие к кнопке удаления в модалке
+
         confirmBtn.onclick = async function() {
             await fetch('/RGZ/api', {
                 method: 'POST',
@@ -498,7 +196,6 @@
             window.location.href = '/RGZ/';
         }
     }
-
     document.addEventListener('DOMContentLoaded', loadProfile);
     </script>
 {% endblock %}

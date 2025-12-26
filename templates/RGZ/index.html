@@ -1,7 +1,7 @@
 {% extends "base2.html" %}
 
 {% block main %}
-    <div class="hero">
+    <div class="hero" style="margin-top: 150px;">
         <a href="/RGZ/" class="hero-icon"><i class="bi bi-clipboard"></i></a>
         <h1>Доска Объявлений</h1>
         <p>Размещайте объявления, находите нужное и общайтесь с другими пользователями</p>
@@ -25,7 +25,6 @@
     </div>
 
     <script>
-    // Твой скрипт остается без изменений, он теперь найдет id="adsGrid"
     async function loadAds() {
         try {
             const response = await fetch('/RGZ/api', {
@@ -43,7 +42,7 @@
             const ads = data.result;
             const container = document.getElementById('adsGrid');
 
-            const currentUserLogin = "{{ session.user_login }}"; // Добавили эту строку
+            const currentUserLogin = "{{ session.user_login }}";
             const currentUserId = "{{ session.user_id }}";
             const isAdmin = (currentUserLogin === "admin");
             
@@ -52,9 +51,7 @@
                 return;
             }
 
-            // Очищаем контейнер перед вставкой
             container.innerHTML = ads.map(ad => {
-                // Проверяем: является ли текущий пользователь админом или автором этого объявления
                 const canDelete = (currentUserLogin === 'admin') || (String(ad.user_id) === String(currentUserId));
 
                 return `
@@ -120,7 +117,7 @@
 
             const data = await response.json();
             if (data.result === "success") {
-                loadAds(); // Перезагружаем список
+                loadAds(); 
             } else {
                 alert("Ошибка при удалении: " + (data.error ? data.error.message : "неизвестная ошибка"));
             }

@@ -52,265 +52,12 @@
             </div>
         </div>
     </div>
-    <style>
-        .btn-create {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 8px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .profile-pic {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .main-content {
-            padding: 40px 10%;
-            margin-top: 50px; /* Отступ от фиксированной шапки */
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: var(--text-gray);
-            font-size: 14px;
-            margin-bottom: 30px;
-            display: inline-block;
-        }
-
-        /* Заголовок с щитом */
-        .admin-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .shield-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-gradient);
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 28px;
-            box-shadow: 0 10px 20px rgba(230, 145, 67, 0.2);
-        }
-
-        .admin-header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            margin: 0;
-        }
-
-        .admin-header p {
-            margin: 5px 0 0;
-            color: var(--text-gray);
-            font-size: 14px;
-        }
-
-        /* Табы (Переключатели) */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            background: #eee;
-            border-radius: 10px;
-            text-decoration: none;
-            color: var(--text-gray);
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.3s;
-        }
-
-        .tab.active {
-            background: #fff;
-            color: var(--text-main);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-
-        /* Сетка карточек */
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 25px;
-        }
-
-        .admin-card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            position: relative;
-        }
-
-        .user-row {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
-
-        .user-details b { display: block; font-size: 16px; }
-        .user-details span { color: #aaa; font-size: 13px; display: block; }
-
-        .bio { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; }
-
-        /* Кнопка удаления */
-        .btn-delete-full {
-            width: 100%;
-            padding: 10px;
-            background: white;
-            border: 1px solid #f8d7da;
-            color: var(--danger);
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 500;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            transition: 0.3s;
-        }
-
-        .btn-delete-full:hover { background: #fff5f5; }
-
-        .trash-abs {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            color: #ccc;
-            cursor: pointer;
-        }
-        
-        .trash-abs:hover { color: var(--danger); }
-        button.tab { border: none; cursor: pointer; font-family: inherit; }
-        .tab.active { background: #fff; color: #2c2c2c; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        
-        /* Стиль для карточки объявления в админке */
-        .ad-admin-card { background: white; border-radius: 15px; padding: 20px; position: relative; border: 1px solid #f0f0f0; }
-        .ad-admin-card h3 { font-family: 'Playfair Display', serif; margin-top: 0; padding-right: 30px; }
-        .ad-admin-card .author { font-size: 12px; color: #aaa; margin-bottom: 10px; display: block; }
-        .btn-edit-user {
-            flex-grow: 1;
-            padding: 10px;
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-        .btn-delete-small {
-            padding: 10px 15px;
-            background: white;
-            border: 1px solid #f8d7da;
-            color: #dc3545;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        .modal-overlay {
-            display: none; /* Скрыто по умолчанию */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
-            z-index: 1000; /* Поверх всего */
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Контент модального окна */
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Стили для полей внутри модалки */
-        .modal-input, .modal-textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            margin-top: 8px;
-            font-family: inherit;
-            box-sizing: border-box; /* Чтобы padding не раздувал ширину */
-        }
-
-        .modal-textarea {
-            height: 100px;
-            resize: none;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-gray);
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 25px;
-        }
-
-        /* Кнопки в модалке */
-        .btn-confirm-save {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-cancel {
-            background: none;
-            border: none;
-            color: var(--text-gray);
-            cursor: pointer;
-        }
-    </style>
     <script>
     let currentTab = 'users';
-
     async function loadData() {
         const grid = document.getElementById('admin-grid');
         grid.innerHTML = '<p>Загрузка...</p>';
 
-        // Вызываем метод в зависимости от активной вкладки
         const method = currentTab === 'users' ? 'admin_get_users' : 'admin_get_ads';
         
         const response = await fetch('/RGZ/api', {
@@ -322,7 +69,6 @@
         const data = await response.json();
         const items = data.result || [];
 
-        // Обновляем счетчики в табах
         if (currentTab === 'users') document.getElementById('count-users').innerText = `(${items.length})`;
         else document.getElementById('count-ads').innerText = `(${items.length})`;
 
@@ -398,7 +144,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', loadData);
-    // Функция открытия модального окна с данными пользователя
     function editUser(id, name, email, bio) {
         document.getElementById('edit-user-id').value = id;
         document.getElementById('edit-user-name').value = name;
@@ -408,7 +153,6 @@
         document.getElementById('editUserModal').style.display = 'flex';
     }
 
-    // Функция сохранения
     async function saveUserEdit() {
         const params = {
             user_id: document.getElementById('edit-user-id').value,
@@ -422,7 +166,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 jsonrpc: "2.0", 
-                method: "admin_edit_user", // Новый метод для бэкенда
+                method: "admin_edit_user",
                 params: params, 
                 id: 1 
             })
@@ -431,7 +175,7 @@
         const data = await response.json();
         if (data.result === 'success') {
             closeModal('editUserModal');
-            loadData(); // Перезагружаем список
+            loadData();
         } else {
             alert("Ошибка при сохранении: " + data.error.message);
         }
