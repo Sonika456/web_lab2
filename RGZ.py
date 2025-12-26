@@ -33,7 +33,6 @@ def api():
         name = params.get('name')
         email = params.get('email')
         about_me = params.get('about_me')
-        avatar_url = params.get('avatar')
 
         pattern = r"^[a-zA-Z0-9._!@#]+$"
         # 1. Валидация (только латиница и цифры для логина)
@@ -57,8 +56,8 @@ def api():
 
             # 4. Вставка в БД
             cur.execute(
-                "INSERT INTO users (login, password, name, email, about_me, avatar) VALUES (%s, %s, %s, %s, %s)",
-                (login, hashed_password, name, email, about_me, avatar_url)
+                "INSERT INTO users (login, password, name, email, about_me) VALUES (%s, %s, %s, %s, %s)",
+                (login, hashed_password, name, email, about_me)
             )
             conn.commit()
             return jsonify({"jsonrpc": "2.0", "result": "success", "id": id})
@@ -83,11 +82,12 @@ def api():
             cur.execute("SELECT * FROM users WHERE login = %s", (login,))
             user = cur.fetchone()
 
+            # 2. Проверяем, существует ли он и совпадает ли пароль
             if user and check_password_hash(user['password'], password):
+                # Сохраняем данные в сессию
                 session['user_id'] = user['id']
                 session['user_login'] = user['login']
                 session['user_name'] = user['name']
-                session['user_avatar'] = user.get('avatar')
                 
                 return jsonify({
                     "jsonrpc": "2.0", 

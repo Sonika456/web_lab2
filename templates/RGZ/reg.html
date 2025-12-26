@@ -40,11 +40,7 @@
                         <i class="fa-regular fa-eye pass-toggle" onclick="togglePassword('confirm_password')"></i>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="avatar_url">Ссылка на аватар (необязательно):</label>
-                    <input type="text" id="avatar_url" name="avatar_url" placeholder="https://example.com/photo.jpg">
-                    <small style="color: #777; font-size: 12px;">Вы можете вставить прямую ссылку на любую картинку из интернета.</small>
-                </div>
+
                 <div class="form-group">
                     <label>О себе</label>
                     <textarea id="about_me" name="about_me" placeholder="Расскажите о себе (необязательно)"></textarea>
@@ -179,7 +175,6 @@
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm_password').value;
         const about_me = document.getElementById('about_me').value;
-        const avatar_url = document.getElementById('avatar').value
 
         // ПРОВЕРКА СОВПАДЕНИЯ ПАРОЛЕЙ
         if (password !== confirmPassword) {
