@@ -74,7 +74,7 @@ def api():
                     ads.title, 
                     ads.content, 
                     ads.created_at,
-                    users.name as author, 
+                    users.login as author, 
                     users.avatar as author_avatar
                 FROM ads 
                 JOIN users ON ads.user_id = users.id 
