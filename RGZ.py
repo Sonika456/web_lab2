@@ -55,7 +55,7 @@ def api():
             if user and check_password_hash(user['password'], password):
                 session['user_id'] = user['id']
                 session['user_login'] = user['login']
-                session['user_name'] = user['name']  # <-- добавьте
+                session['user_name'] = user['name'] 
                 return jsonify({"jsonrpc":"2.0","result":"success","id":rid})
             return jsonify({"jsonrpc":"2.0","error":{"message":"Ошибка входа"},"id":rid})
 
@@ -74,7 +74,7 @@ def api():
                     ads.title, 
                     ads.content, 
                     ads.created_at,
-                    users.login as author, 
+                    users.name as author, 
                     users.avatar as author_avatar
                 FROM ads 
                 JOIN users ON ads.user_id = users.id 
