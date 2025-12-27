@@ -39,16 +39,13 @@ def api():
         if method == 'register':
             login = params.get('login')
             password = params.get('password')
-            name = params.get('name')
-            email = params.get('email')
-            about_me = params.get('about_me', '')
-            if not re.match(r"^[a-zA-Z0-9._!@#]+$", login):
-                return jsonify({"jsonrpc":"2.0","error":{"message":"Неверный формат логина"},"id":rid})
+            name = params.get('name') or login # Если имя пустое, ставим логин
+            email = params.get('email') or (login + "@example.com") # Если емейл пустой, создаем заглушку
+            
             hash_pw = generate_password_hash(password)
-            cur.execute("INSERT INTO users (login,password,name,email,about_me) VALUES (?,?,?,?,?)",
-                        (login, hash_pw, name, email, about_me))
+            cur.execute("INSERT INTO users (login, password, name, email, about_me) VALUES (?,?,?,?,?)",
+                        (login, hash_pw, name, email, params.get('about_me', '')))
             conn.commit()
-            return jsonify({"jsonrpc":"2.0","result":"success","id":rid})
 
         # 2. login
         elif method == 'login':
@@ -67,18 +64,25 @@ def api():
             return jsonify({"jsonrpc":"2.0","result":"success","id":rid})
 
         # 4. get_ads (Все объявления для главной)
+
         elif method == 'get_ads':
-            conn = db_connect()
-            cur = conn.cursor()
-            # Проверьте, что названия таблиц и полей совпадают с init_db
+            # Явно перечисляем поля, чтобы избежать конфликтов имен (id из ads и id из users)
             rows = cur.execute("""
-                SELECT ads.id, ads.title, ads.content, users.login as author 
+                SELECT 
+                    ads.id, 
+                    ads.title, 
+                    ads.content, 
+                    ads.created_at,
+                    users.login as author, 
+                    users.avatar as author_avatar
                 FROM ads 
                 JOIN users ON ads.user_id = users.id 
                 ORDER BY ads.id DESC
             """).fetchall()
-            conn.close()
-            return jsonify({"jsonrpc": "2.0", "result": [dict(r) for r in rows], "id": rid})
+            
+            # Превращаем результат в список словарей
+            result_ads = [dict(r) for r in rows]
+            return jsonify({"jsonrpc": "2.0", "result": result_ads, "id": rid})
 
         # 5. create_ad
         elif method == 'create_ad':
