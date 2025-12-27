@@ -142,7 +142,6 @@
             loadData();
         }
     }
-
     document.addEventListener('DOMContentLoaded', loadData);
     function editUser(id, name, email, bio) {
         document.getElementById('edit-user-id').value = id;
@@ -152,7 +151,6 @@
         
         document.getElementById('editUserModal').style.display = 'flex';
     }
-
     async function saveUserEdit() {
         const params = {
             user_id: document.getElementById('edit-user-id').value,
@@ -160,7 +158,6 @@
             email: document.getElementById('edit-user-email').value,
             about_me: document.getElementById('edit-user-bio').value
         };
-
         const response = await fetch('/RGZ/api', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -171,7 +168,6 @@
                 id: 1 
             })
         });
-
         const data = await response.json();
         if (data.result === 'success') {
             closeModal('editUserModal');
@@ -180,7 +176,6 @@
             alert("Ошибка при сохранении: " + data.error.message);
         }
     }
-
     function closeModal(id) {
         document.getElementById(id).style.display = 'none';
     }

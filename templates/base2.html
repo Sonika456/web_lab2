@@ -89,7 +89,6 @@
                 <div class="user-menu-container">
                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ session.user_login }}" 
                         class="profile-pic" id="avatar-trigger" alt="User Avatar" style="cursor: pointer;">
-
                     <div class="dropdown-menu" id="userDropdown">
                         <div class="dropdown-header">
                             <strong>{{ session.user_name }}</strong>
@@ -97,21 +96,16 @@
                                 <div class="admin-badge"><i class="fa-solid fa-shield-halved"></i> Администратор</div>
                             {% endif %}
                         </div>
-                        
                         <hr>
-                        
                         <a href="/RGZ/profile" class="dropdown-item">
                             <i class="fa-regular fa-user"></i> Профиль
                         </a>
-                        
                         {% if session.user_login == 'admin' %}
                         <a href="/RGZ/admin" class="dropdown-item">
                             <i class="fa-solid fa-shield"></i> Администрирование
                         </a>
                         {% endif %}
-                        
                         <hr>
-                        
                         <a href="/RGZ/logout" class="dropdown-item logout-link">
                             <i class="bi bi-box-arrow-right"></i> Выйти
                         </a>
@@ -123,7 +117,6 @@
             {% endif %}
         </div>
     </header>
-
     <main>
         {% block main %}{% endblock %}
     </main>
