@@ -4,24 +4,15 @@ import os
 from werkzeug.security import check_password_hash, generate_password_hash
 import re
 
-RGZ = Blueprint('RGZ', __name__)
-
-# --- РАБОТА С БАЗОЙ ДАННЫХ SQLite ---
+RGZ = Blueprint('RGZ', name)
 
 def db_connect():
-    db_path = os.path.join(os.path.dirname(__file__), 'database.db')
+    db_path = os.path.join(os.path.dirname(file), 'database.db')
     conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row # Позволяет обращаться row['column_name']
+    conn.row_factory = sqlite3.Row 
     return conn
 
-# --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
-def is_admin():
-    return session.get('user_login') == 'admin'
-
-def get_current_user_id():
-    return session.get('user_id')
-
-# --- API МЕТОДЫ (JSON-RPC 2.0) ---
+# --- API МЕТОДЫ ---
 
 @RGZ.route('/RGZ/api', methods=['POST'])
 def api():
@@ -29,25 +20,26 @@ def api():
     method = data.get('method')
     params = data.get('params', {})
     rid = data.get('id')
-    user_id = get_current_user_id()
+    user_id = session.get('user_id')
 
     conn = db_connect()
     cur = conn.cursor()
 
     try:
-        # 1. register
+        # 1. Регистрация (Исправлено: теперь возвращает успех)
         if method == 'register':
             login = params.get('login')
             password = params.get('password')
-            name = params.get('name') or login # Если имя пустое, ставим логин
-            email = params.get('email') or (login + "@example.com") # Если емейл пустой, создаем заглушку
+            name = params.get('name') or login # Важно для вашей таблицы NOT NULL
+            email = params.get('email')
             
             hash_pw = generate_password_hash(password)
-            cur.execute("INSERT INTO users (login, password, name, email, about_me) VALUES (?,?,?,?,?)",
+            cur.execute("INSERT INTO users (login, password, name, email, about_me) VALUES (?, ?, ?, ?, ?)",
                         (login, hash_pw, name, email, params.get('about_me', '')))
             conn.commit()
+            return jsonify({"jsonrpc": "2.0", "result": "success", "id": rid})
 
-        # 2. login
+        # 2. Вход
         elif method == 'login':
             login = params.get('login')
             password = params.get('password')
@@ -55,49 +47,38 @@ def api():
             if user and check_password_hash(user['password'], password):
                 session['user_id'] = user['id']
                 session['user_login'] = user['login']
-                session['user_name'] = user['name'] 
-                return jsonify({"jsonrpc":"2.0","result":"success","id":rid})
-            return jsonify({"jsonrpc":"2.0","error":{"message":"Ошибка входа"},"id":rid})
+                return jsonify({"jsonrpc": "2.0", "result": "success", "id": rid})
+            return jsonify({"jsonrpc": "2.0", "error": {"message": "Неверный логин или пароль"}, "id": rid})
 
-        # 3. logout (API версия)
-        elif method == 'logout':
-            session.clear()
-            return jsonify({"jsonrpc":"2.0","result":"success","id":rid})
-
-        # 4. get_ads (Все объявления для главной)
-
+        # 3. Получение объявлений для главной (Исправлено отображение Имени)
         elif method == 'get_ads':
-            # Явно перечисляем поля, чтобы избежать конфликтов имен (id из ads и id из users)
             rows = cur.execute("""
-                SELECT 
-                    ads.id, 
-                    ads.title, 
-                    ads.content, 
-                    ads.created_at,
-                    users.login as author, 
-                    users.avatar as author_avatar
+                SELECT ads.id, ads.title, ads.content, ads.created_at, users.name as author 
                 FROM ads 
                 JOIN users ON ads.user_id = users.id 
                 ORDER BY ads.id DESC
             """).fetchall()
-            
-            # Превращаем результат в список словарей
-            result_ads = [dict(r) for r in rows]
-            return jsonify({"jsonrpc": "2.0", "result": result_ads, "id": rid})
+            return jsonify({"jsonrpc": "2.0", "result": [dict(r) for r in rows], "id": rid})
 
-        # 5. create_ad
+        # 4. Получение моих объявлений (Для профиля справа)
+        elif method == 'get_my_ads':
+            if not user_id: return jsonify({"jsonrpc": "2.0", "result": [], "id": rid})
+            rows = cur.execute("SELECT * FROM ads WHERE user_id = ? ORDER BY id DESC", (user_id,)).fetchall()
+            return jsonify({"jsonrpc": "2.0", "result": [dict(r) for r in rows], "id": rid})
+
+        # 5. Информация о пользователе (Для профиля)
+        elif method == 'get_user_info':
+            if not user_id: return jsonify({"jsonrpc": "2.0", "result": None, "id": rid})
+            user = cur.execute("SELECT id, login, name, email, about_me FROM users WHERE id = ?", (user_id,)).fetchone()
+            return jsonify({"jsonrpc": "2.0", "result": dict(user), "id": rid})
+
+        # 6. Создание объявления
         elif method == 'create_ad':
-            if not user_id: return jsonify({"jsonrpc":"2.0","error":{"message":"Нужна авторизация"},"id":rid})
-            cur.execute("INSERT INTO ads (user_id, title, content) VALUES (?,?,?)",
+            if not user_id: return jsonify({"jsonrpc": "2.0", "error": {"message": "Войдите в систему"}, "id": rid})
+            cur.execute("INSERT INTO ads (user_id, title, content) VALUES (?, ?, ?)",
                         (user_id, params.get('title'), params.get('content')))
             conn.commit()
-            return jsonify({"jsonrpc":"2.0","result":"success","id":rid})
-
-        # 6. get_user_info
-        elif method == 'get_user_info':
-            if not user_id: return jsonify({"jsonrpc":"2.0","result":None,"id":rid})
-            user = cur.execute("SELECT id, login, name, email, about_me FROM users WHERE id = ?", (user_id,)).fetchone()
-            return jsonify({"jsonrpc":"2.0","result":dict(user),"id":rid})
+            return jsonify({"jsonrpc": "2.0", "result": "success", "id": rid})
 
         # 7. delete_account (Сам пользователь)
         elif method == 'delete_account':
