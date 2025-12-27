@@ -55,6 +55,7 @@ def api():
             if user and check_password_hash(user['password'], password):
                 session['user_id'] = user['id']
                 session['user_login'] = user['login']
+                session['user_name'] = user['name']  # <-- добавьте
                 return jsonify({"jsonrpc":"2.0","result":"success","id":rid})
             return jsonify({"jsonrpc":"2.0","error":{"message":"Ошибка входа"},"id":rid})
 
