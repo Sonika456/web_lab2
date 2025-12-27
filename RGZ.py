@@ -68,11 +68,17 @@ def api():
 
         # 4. get_ads (Все объявления для главной)
         elif method == 'get_ads':
+            conn = db_connect()
+            cur = conn.cursor()
+            # Проверьте, что названия таблиц и полей совпадают с init_db
             rows = cur.execute("""
-                SELECT ads.*, users.login as author 
-                FROM ads JOIN users ON ads.user_id = users.id 
-                ORDER BY ads.id DESC""").fetchall()
-            return jsonify({"jsonrpc":"2.0","result":[dict(r) for r in rows],"id":rid})
+                SELECT ads.id, ads.title, ads.content, users.login as author 
+                FROM ads 
+                JOIN users ON ads.user_id = users.id 
+                ORDER BY ads.id DESC
+            """).fetchall()
+            conn.close()
+            return jsonify({"jsonrpc": "2.0", "result": [dict(r) for r in rows], "id": rid})
 
         # 5. create_ad
         elif method == 'create_ad':
