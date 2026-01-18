@@ -12,7 +12,6 @@ def db_connect():
     if current_app.config.get('DB_TYPE') == 'postgres':
         import psycopg2
         from psycopg2.extras import RealDictCursor
-        
         conn = psycopg2.connect(
             host='127.0.0.1',
             database='sonia_base',
@@ -30,8 +29,7 @@ def db_connect():
     return conn, cur
 
 def db_close(conn, cur):
-    """Закрытие соединения с базой данных"""
-    conn.commit()
+    """Закрытие соединения"""
     cur.close()
     conn.close()
 
@@ -49,16 +47,16 @@ def execute_query(cur, query, params=None):
 
 
 def format_date(date_val):
-    """Безопасное форматирование даты для разных БД"""
     if not date_val:
         return ''
     if isinstance(date_val, str):
-        # SQLite возвращает строку. Пытаемся распарсить стандартный формат ISO
         try:
-            # Обычно 'YYYY-MM-DD HH:MM:SS'
-            dt = datetime.strptime(date_val.split('.')[0], '%Y-%m-%d %H:%M:%S')
+            # Убираем миллисекунды, если они есть (часто бывает в SQLite/Postgres)
+            clean_date = date_val.split('.')[0]
+            dt = datetime.strptime(clean_date, '%Y-%m-%d %H:%M:%S')
             return dt.strftime('%d.%m.%Y %H:%M')
-        except:
+        except Exception:
+            # Если формат совсем другой, возвращаем как есть, чтобы не упало
             return date_val
     return date_val.strftime('%d.%m.%Y %H:%M')
 
@@ -115,17 +113,14 @@ def api():
         finally:
             db_close(conn, cur)
     
-    if method == 'logout':
-        session.clear()
-        return jsonify({"jsonrpc": "2.0", "result": "success", "id": id})
-    
     if method == 'get_ads':
         conn, cur = db_connect()
         try:
+            # Используем LEFT JOIN, чтобы объявления не пропадали при ошибках связей
             execute_query(cur, '''
                 SELECT a.*, u.login as author_login, u.name as author_name, u.email as author_email 
                 FROM ads a 
-                JOIN users u ON a.user_id = u.id 
+                LEFT JOIN users u ON a.user_id = u.id 
                 ORDER BY a.created_at DESC
             ''')
             ads = cur.fetchall()
@@ -134,7 +129,6 @@ def api():
             for ad in ads:
                 ad_dict = dict(ad)
                 ad_dict['created_at'] = format_date(ad_dict.get('created_at'))
-                # Скрываем email для неавторизованных
                 if 'user_id' not in session:
                     ad_dict['author_email'] = None
                 processed_ads.append(ad_dict)
@@ -198,7 +192,9 @@ def api():
             
         conn, cur = db_connect()
         try:
-            execute_query(cur, "SELECT id, title, content, created_at FROM ads WHERE user_id = %s ORDER BY created_at DESC", (session['user_id'],))
+            # Явно приводим user_id к int для SQLite
+            u_id = int(session['user_id'])
+            execute_query(cur, "SELECT id, title, content, created_at FROM ads WHERE user_id = %s ORDER BY created_at DESC", (u_id,))
             ads = cur.fetchall()
             
             processed_ads = []
@@ -208,8 +204,6 @@ def api():
                 processed_ads.append(ad_dict)
                     
             return jsonify({"jsonrpc": "2.0", "result": processed_ads, "id": id})
-        except Exception as e:
-            return jsonify({"jsonrpc": "2.0", "error": {"message": str(e)}, "id": id})
         finally:
             db_close(conn, cur)
     
