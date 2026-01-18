@@ -79,61 +79,78 @@
     </div>
     <script>
     async function loadProfile() {
-        const response = await fetch('/RGZ/api', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jsonrpc: "2.0", method: "get_user_info", params: {}, id: 1 })
-        });
-        const data = await response.json();
-        const user = data.result;
+        try {
+            const response = await fetch('/RGZ/api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ jsonrpc: "2.0", method: "get_user_info", params: {}, id: 1 })
+            });
+            const data = await response.json();
+            const user = data.result;
 
-        if (user) {
-            document.getElementById('profile-name-display').innerText = user.name;
-            document.getElementById('profile-login-display').innerText = `@${user.login}`;
-            document.getElementById('profile-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.login}`;
-            
-            document.getElementById('input-name').value = user.name;
-            document.getElementById('input-email').value = user.email || '';
-            document.getElementById('input-bio').value = user.bio || '';
+            if (user) {
+                document.getElementById('profile-name-display').innerText = user.name;
+                document.getElementById('profile-login-display').innerText = `@${user.login}`;
+                document.getElementById('profile-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.login}`;
+                
+                document.getElementById('input-name').value = user.name;
+                document.getElementById('input-email').value = user.email || '';
+                document.getElementById('input-bio').value = user.bio || '';
+            }
+        } catch (e) {
+            console.error("Ошибка загрузки профиля:", e);
         }
-        loadMyAds();
+        
+        // Вызываем загрузку объявлений ВНЕ блока if (user) [cite: 58]
+        loadMyAds(); 
     }
 
     async function loadMyAds() {
-        const response = await fetch('/RGZ/api', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jsonrpc: "2.0", method: "get_my_ads", params: {}, id: 1 })
-        });
-        const data = await response.json();
-        const ads = data.result || [];
-        
-        document.getElementById('ad-count-label').innerText = `${ads.length} объявл.`;
         const container = document.getElementById('my-ads-container');
+        try {
+            const response = await fetch('/RGZ/api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ jsonrpc: "2.0", method: "get_my_ads", params: {}, id: 1 })
+            });
+            const data = await response.json();
+            
+            // Если сервер вернул ошибку, выводим её в консоль для отладки [cite: 59]
+            if (data.error) {
+                console.error("Ошибка API:", data.error.message);
+                container.innerHTML = `<p style="color:red">Ошибка: ${data.error.message}</p>`;
+                return;
+            }
 
-        if (ads.length > 0) {
-            container.innerHTML = ads.map(ad => `
-                <div class="ad-card-mini" id="ad-${ad.id}">
-                    <div class="ad-controls" style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
-                        <i class="bi bi-pen" onclick="editAd(${ad.id}, '${ad.title}', '${ad.content.replace(/'/g, "\\'")}')" 
-                        title="Редактировать" style="cursor: pointer; color: #aaa;"></i>
-                        <i class="bi bi-trash3" onclick="deleteAd(${ad.id})" 
-                        title="Удалить" style="cursor: pointer; color: #aaa;"></i>
+            const ads = data.result || [];
+            document.getElementById('ad-count-label').innerText = `${ads.length} объявл.`;
+
+            if (ads.length > 0) {
+                container.innerHTML = ads.map(ad => `
+                    <div class="ad-card-mini" id="ad-${ad.id}">
+                        <div class="ad-controls" style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
+                            <i class="bi bi-pen" onclick="editAd(${ad.id}, \`${ad.title.replace(/`/g, "\\`")}\`, \`${ad.content.replace(/`/g, "\\`")}\`)" 
+                            title="Редактировать" style="cursor: pointer; color: #aaa;"></i>
+                            <i class="bi bi-trash3" onclick="deleteAd(${ad.id})" 
+                            title="Удалить" style="cursor: pointer; color: #aaa;"></i>
+                        </div>
+                        <h3 style="font-family: 'Playfair Display', serif; margin: 0 0 10px; padding-right: 50px;">${ad.title}</h3>
+                        <p style="color: #777; font-size: 14px; line-height: 1.5;">${ad.content}</p>
+                        <small style="color: #ccc; font-size: 11px;"><i class="bi bi-calendar-event"></i> ${ad.created_at}</small>
                     </div>
-                    <h3 style="font-family: 'Playfair Display', serif; margin: 0 0 10px; padding-right: 50px;">${ad.title}</h3>
-                    <p style="color: #777; font-size: 14px; line-height: 1.5;">${ad.content}</p>
-                    <small style="color: #ccc; font-size: 11px;"><i class="bi bi-calendar-event"></i> ${ad.created_at}</small>
-                </div>
-            `).join('');
-        } else {
-            container.innerHTML = `
-                <div class="empty-state-card">
-                    <i class="bi bi-file-earmark-text"></i>
-                    <h3>У вас пока нет объявлений</h3>
-                    <p>Создайте своё первое объявление</p>
-                    <a href="/RGZ/create" class="btn-create-large">Создать объявление</a>
-                </div>
-            `;
+                `).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="empty-state-card">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <h3>У вас пока нет объявлений</h3>
+                        <p>Создайте своё первое объявление</p>
+                        <a href="/RGZ/create" class="btn-create-large">Создать объявление</a>
+                    </div>`;
+            }
+        } catch (e) {
+            console.error("Критическая ошибка JS:", e);
+            container.innerHTML = `<p>Не удалось загрузить объявления.</p>`;
         }
     }
 

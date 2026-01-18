@@ -8,22 +8,16 @@ from datetime import datetime
 RGZ = Blueprint('RGZ', __name__)
 
 def db_connect():
-    """Подключение к базе данных в зависимости от типа"""
     if current_app.config.get('DB_TYPE') == 'postgres':
         import psycopg2
         from psycopg2.extras import RealDictCursor
-        conn = psycopg2.connect(
-            host='127.0.0.1',
-            database='sonia_base',
-            user='sonia_base',
-            password='+Vkk1'
-        )
+        conn = psycopg2.connect(host='127.0.0.1', database='sonia_base', user='sonia_base', password='+Vkk1')
         cur = conn.cursor(cursor_factory=RealDictCursor)
     else:
-        # SQLite
         dir_path = path.dirname(path.realpath(__file__))
         db_path = path.join(dir_path, "database.db")
         conn = sqlite3.connect(db_path)
+        conn.execute("PRAGMA foreign_keys = ON;") # Важно для работы связей 
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
     return conn, cur
@@ -192,8 +186,8 @@ def api():
             
         conn, cur = db_connect()
         try:
-            # Явно приводим user_id к int для SQLite
-            u_id = int(session['user_id'])
+            # Принудительно приводим к числу, так как SQLite чувствителен к типам 
+            u_id = int(session['user_id']) 
             execute_query(cur, "SELECT id, title, content, created_at FROM ads WHERE user_id = %s ORDER BY created_at DESC", (u_id,))
             ads = cur.fetchall()
             
@@ -204,6 +198,8 @@ def api():
                 processed_ads.append(ad_dict)
                     
             return jsonify({"jsonrpc": "2.0", "result": processed_ads, "id": id})
+        except Exception as e:
+            return jsonify({"jsonrpc": "2.0", "error": {"message": str(e)}, "id": id})
         finally:
             db_close(conn, cur)
     
