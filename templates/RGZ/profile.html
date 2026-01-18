@@ -106,52 +106,52 @@
     }
 
     async function loadMyAds() {
-    try {
-        const response = await fetch('/RGZ/api', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jsonrpc: "2.0", method: "get_my_ads", params: {}, id: 1 })
-        });
-        const data = await response.json();
-        const ads = data.result || [];
-        
-        document.getElementById('ad-count-label').innerText = `${ads.length} объявл.`;
-        const container = document.getElementById('my-ads-container');
-        
-        if (ads.length > 0) {
-            container.innerHTML = ads.map(ad => {
-                // Экранируем кавычки для безопасной передачи в onclick
-                const safeTitle = ad.title.replace(/`/g, "\\`").replace(/'/g, "\\'");
-                const safeContent = ad.content.replace(/`/g, "\\`").replace(/'/g, "\\'");
+        try {
+            const response = await fetch('/RGZ/api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ jsonrpc: "2.0", method: "get_my_ads", params: {}, id: 1 })
+            });
+            const data = await response.json();
+            const ads = data.result || [];
+            
+            document.getElementById('ad-count-label').innerText = `${ads.length} объявл.`;
+            const container = document.getElementById('my-ads-container');
+            
+            if (ads.length > 0) {
+                container.innerHTML = ads.map(ad => {
+                    // Экранируем кавычки для безопасной передачи в onclick
+                    const safeTitle = ad.title.replace(/`/g, "\\`").replace(/'/g, "\\'");
+                    const safeContent = ad.content.replace(/`/g, "\\`").replace(/'/g, "\\'");
 
-                return `
-                    <div class="ad-card-mini" id="ad-${ad.id}" style="border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 10px; position: relative; background: #fff;">
-                        <div class="ad-controls" style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
-                            <i class="bi bi-pen" onclick="editAd(${ad.id}, \`${safeTitle}\`, \`${safeContent}\` )" 
-                                title="Редактировать" style="cursor: pointer; color: #999;"></i>
-                            <i class="bi bi-trash3" onclick="deleteAd(${ad.id})" 
-                                title="Удалить" style="cursor: pointer; color: #999;"></i>
+                    return `
+                        <div class="ad-card-mini" id="ad-${ad.id}" style="border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 10px; position: relative; background: #fff;">
+                            <div class="ad-controls" style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
+                                <i class="bi bi-pen" onclick="editAd(${ad.id}, \`${safeTitle}\`, \`${safeContent}\` )" 
+                                    title="Редактировать" style="cursor: pointer; color: #999;"></i>
+                                <i class="bi bi-trash3" onclick="deleteAd(${ad.id})" 
+                                    title="Удалить" style="cursor: pointer; color: #999;"></i>
+                            </div>
+                            <h3 style="font-family: 'Playfair Display', serif; margin: 0 0 10px; padding-right: 50px; color: #333;">${ad.title}</h3>
+                            <p style="color: #555; font-size: 14px; line-height: 1.5; margin-bottom: 10px;">${ad.content}</p>
+                            <small style="color: #bbb; font-size: 11px;"><i class="bi bi-calendar-event"></i> ${ad.created_at}</small>
                         </div>
-                        <h3 style="font-family: 'Playfair Display', serif; margin: 0 0 10px; padding-right: 50px; color: #333;">${ad.title}</h3>
-                        <p style="color: #555; font-size: 14px; line-height: 1.5; margin-bottom: 10px;">${ad.content}</p>
-                        <small style="color: #bbb; font-size: 11px;"><i class="bi bi-calendar-event"></i> ${ad.created_at}</small>
+                    `;
+                }).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="empty-state-card" style="text-align: center; padding: 40px; border: 2px dashed #eee;">
+                        <i class="bi bi-file-earmark-text" style="font-size: 40px; color: #ccc;"></i>
+                        <h3>У вас пока нет объявлений</h3>
+                        <p>Создайте своё первое объявление</p>
+                        <a href="/RGZ/create" class="btn-create-large">Создать объявление</a>
                     </div>
                 `;
-            }).join('');
-        } else {
-            container.innerHTML = `
-                <div class="empty-state-card" style="text-align: center; padding: 40px; border: 2px dashed #eee;">
-                    <i class="bi bi-file-earmark-text" style="font-size: 40px; color: #ccc;"></i>
-                    <h3>У вас пока нет объявлений</h3>
-                    <p>Создайте своё первое объявление</p>
-                    <a href="/RGZ/create" class="btn-create-large">Создать объявление</a>
-                </div>
-            `;
+            }
+        } catch (e) {
+            console.error("Ошибка при отрисовке объявлений:", e);
         }
-    } catch (e) {
-        console.error("Ошибка при отрисовке объявлений:", e);
     }
-}
 
     function editAd(adId, title, content) {
         currentEditId = adId;
@@ -213,5 +213,46 @@
         }
     }
     document.addEventListener('DOMContentLoaded', loadProfile);
+    document.addEventListener('DOMContentLoaded', () => {
+        const profileForm = document.getElementById('profile-form');
+        
+        if (profileForm) {
+            profileForm.addEventListener('submit', async function(e) {
+                e.preventDefault(); // Важно: предотвращает перезагрузку страницы
+
+                const params = {
+                    name: document.getElementById('input-name').value,
+                    email: document.getElementById('input-email').value,
+                    about_me: document.getElementById('input-bio').value
+                };
+
+                try {
+                    const response = await fetch('/RGZ/api', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            jsonrpc: "2.0",
+                            method: "update_profile",
+                            params: params,
+                            id: 1
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.result === "success") {
+                        alert("Изменения сохранены!");
+                        // Обновляем текст в "карточке" слева
+                        document.getElementById('profile-name-display').innerText = params.name;
+                    } else {
+                        alert("Ошибка: " + (data.error ? data.error.message : "Неизвестная ошибка"));
+                    }
+                } catch (err) {
+                    console.error("Ошибка сети:", err);
+                    alert("Не удалось связаться с сервером");
+                }
+            });
+        }
+    });
     </script>
 {% endblock %}

@@ -54,6 +54,8 @@ def format_date(date_val):
             return date_val
     return date_val.strftime('%d.%m.%Y %H:%M')
 
+
+
 @RGZ.route('/RGZ/api', methods=['POST'])
 def api():
     data = request.json
@@ -158,6 +160,27 @@ def api():
             # Фронтенд ожидает 'bio' вместо 'about_me'
             user_dict['bio'] = user_dict.pop('about_me') or ""
             return jsonify({"jsonrpc": "2.0", "result": user_dict, "id": id})
+        finally:
+            db_close(conn, cur)
+
+    if method == 'update_profile':
+        if 'user_id' not in session:
+            return jsonify({"jsonrpc": "2.0", "error": {"message": "Не авторизован"}, "id": id})
+        
+        # Получаем данные из params
+        name = params.get('name')
+        email = params.get('email')
+        about_me = params.get('about_me') # JavaScript пришлет это имя
+
+        conn, cur = db_connect()
+        try:
+            # Используем %s или ?, в зависимости от вашей execute_query
+            execute_query(cur, "UPDATE users SET name = %s, email = %s, about_me = %s WHERE id = %s", 
+                          (name, email, about_me, session['user_id']))
+            conn.commit() # БЕЗ ЭТОГО НЕ СОХРАНИТСЯ
+            return jsonify({"jsonrpc": "2.0", "result": "success", "id": id})
+        except Exception as e:
+            return jsonify({"jsonrpc": "2.0", "error": {"message": str(e)}, "id": id})
         finally:
             db_close(conn, cur)
 
