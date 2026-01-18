@@ -281,23 +281,23 @@ def api():
         finally:
             db_close(conn, cur)
 
-    if method == 'admin_get_ads' and session.get('user_login') == 'admin':
+    if method == 'admin_get_ads':
         conn, cur = db_connect()
         try:
-            execute_query(cur, """
-                SELECT ads.*, users.login as author_login 
-                FROM ads 
-                JOIN users ON ads.user_id = users.id 
-                ORDER BY ads.id DESC
-            """)
+            # Используем JOIN, чтобы достать логин автора из таблицы users
+            execute_query(cur, '''
+                SELECT a.id, a.title, a.content, u.login 
+                FROM ads a 
+                JOIN users u ON a.user_id = u.id 
+                ORDER BY a.created_at DESC
+            ''')
             ads = cur.fetchall()
-            # Важно: обрабатываем даты!
-            processed = []
-            for ad in ads:
-                d = dict(ad)
-                d['created_at'] = format_date(d.get('created_at'))
-                processed.append(d)
-            return jsonify({"jsonrpc": "2.0", "result": processed, "id": id})
+            
+            # Превращаем в список словарей для JSON
+            processed_ads = [dict(ad) for ad in ads]
+            return jsonify({"jsonrpc": "2.0", "result": processed_ads, "id": id})
+        except Exception as e:
+            return jsonify({"jsonrpc": "2.0", "error": {"message": str(e)}, "id": id})
         finally:
             db_close(conn, cur)
 

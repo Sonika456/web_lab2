@@ -52,6 +52,25 @@
             </div>
         </div>
     </div>
+    <style>
+        .admin-grid {
+            width: 100%;
+        }
+        .main-content {
+            margin-top: 80px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; 
+            padding: 40px 5%; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .back-link {
+            align-self: flex-start; /* Гарантия левого края */
+        }
+
+    </style>
     <script>
     let currentTab = 'users';
     async function loadData() {
