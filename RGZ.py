@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import re
 import sqlite3
 from os import path
+from datetime import datetime
 
 RGZ = Blueprint('RGZ', __name__)
 
@@ -45,6 +46,21 @@ def execute_query(cur, query, params=None):
         # Заменяем %s на ? для SQLite
         query = query.replace('%s', '?')
         cur.execute(query, params)
+
+
+def format_date(date_val):
+    """Безопасное форматирование даты для разных БД"""
+    if not date_val:
+        return ''
+    if isinstance(date_val, str):
+        # SQLite возвращает строку. Пытаемся распарсить стандартный формат ISO
+        try:
+            # Обычно 'YYYY-MM-DD HH:MM:SS'
+            dt = datetime.strptime(date_val.split('.')[0], '%Y-%m-%d %H:%M:%S')
+            return dt.strftime('%d.%m.%Y %H:%M')
+        except:
+            return date_val
+    return date_val.strftime('%d.%m.%Y %H:%M')
 
 @RGZ.route('/RGZ/api', methods=['POST'])
 def api():
@@ -137,7 +153,7 @@ def api():
         for ad in ads:
             ad_dict = dict(ad)
             if 'created_at' in ad_dict and ad_dict['created_at']:
-                ad_dict['created_at'] = ad_dict['created_at'].strftime('%d.%m.%Y %H:%M')
+                ad_dict['created_at'] = format_date(ad_dict.get('created_at'))
             if 'user_id' not in session:
                 ad_dict['author_email'] = None
             processed_ads.append(ad_dict)
@@ -225,7 +241,7 @@ def api():
             for ad in ads:
                 ad_dict = dict(ad)
                 if ad_dict.get('created_at'):
-                    ad_dict['created_at'] = ad_dict['created_at'].strftime('%d.%m.%Y %H:%M')
+                    ad_dict['created_at'] = format_date(ad_dict.get('created_at'))
                 else:
                     ad_dict['created_at'] = ''
                 processed_ads.append(ad_dict)
@@ -321,18 +337,25 @@ def api():
         db_close(conn, cur)
         return jsonify({"jsonrpc": "2.0", "result": users_list, "id": id})
 
-    if method == 'admin_get_ads' and is_admin:
+    if method == 'admin_get_ads' and session.get('user_login') == 'admin':
         conn, cur = db_connect()
-        execute_query(cur, """
-            SELECT ads.*, users.login 
-            FROM ads 
-            JOIN users ON ads.user_id = users.id 
-            ORDER BY ads.id DESC
-        """)
-        ads = cur.fetchall()
-        ads_list = [dict(ad) for ad in ads]
-        db_close(conn, cur)
-        return jsonify({"jsonrpc": "2.0", "result": ads_list, "id": id})
+        try:
+            execute_query(cur, """
+                SELECT ads.*, users.login as author_login 
+                FROM ads 
+                JOIN users ON ads.user_id = users.id 
+                ORDER BY ads.id DESC
+            """)
+            ads = cur.fetchall()
+            # Важно: обрабатываем даты!
+            processed = []
+            for ad in ads:
+                d = dict(ad)
+                d['created_at'] = format_date(d.get('created_at'))
+                processed.append(d)
+            return jsonify({"jsonrpc": "2.0", "result": processed, "id": rid})
+        finally:
+            db_close(conn, cur)
 
     if method == 'admin_edit_user' and is_admin:
         user_id = params.get('user_id')
