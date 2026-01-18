@@ -1,6 +1,6 @@
 :root {
     --primary-gradient: linear-gradient(135deg, #e69143, #c66b2d);
-    --bg-gradient: radial-gradient(circle at center, #faf6f1 0%, #f3ece2 100%);
+    --bg-gradient: radial-gradient(circle at center, #faf6f1 0%, #f7e8d3 100%);
     --text-main: #2c2c2c;
     --bg-color: #fdfaf7;
     --text-gray: #777;
