@@ -104,9 +104,11 @@
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('regForm').onsubmit = registerUser;
     });
-    function togglePassword() {
-        const passInput = document.getElementById('password');
-        passInput.type = passInput.type === 'password' ? 'text' : 'password';
+    function togglePassword(inputId) {
+        const passInput = document.getElementById(inputId);
+        if (passInput) {
+            passInput.type = passInput.type === 'password' ? 'text' : 'password';
+        }
     }
     </script>
 {% endblock %}
